@@ -75,6 +75,8 @@ button { font: inherit; color: inherit; }
 .cam { position: absolute; inset: 0; transform-style: preserve-3d; pointer-events: none; will-change: transform; z-index: 0; }
 .cam > * { position: absolute; }
 .bgp { inset: -12%; background: center / cover no-repeat; transform: translateZ(var(--z, -650px)) scale(var(--s, 1.45)); backface-visibility: hidden; }
+.bgp > video.loop { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .9s ease; pointer-events: none; }
+.bgp > video.loop.on { opacity: 1; }
 .fl { left: var(--x); top: var(--y); width: var(--w, 64px); transform: translateZ(var(--z, 0px)); animation: drift var(--d, 7s) ease-in-out var(--dl, 0s) infinite alternate; filter: drop-shadow(0 8px 6px rgba(58, 42, 122, .18)); }
 @keyframes drift { from { translate: 0 0; rotate: -8deg; } to { translate: 0 -26px; rotate: 10deg; } }
 .ui { position: relative; z-index: 2; }
@@ -677,7 +679,7 @@ button { font: inherit; color: inherit; }
   <!-- the title screen -->
   <section class="stage hero" id="top" data-cam="22,12,4,6,8,160">
     <div class="cam" aria-hidden="true">
-      <div class="bgp" style="background-image:url(assets/ui/bg_hero.webp);--z:-700px;--s:1.6"></div>
+      <div class="bgp" data-loop="hero" style="background-image:url(assets/ui/bg_hero.webp);--z:-700px;--s:1.6"></div>
       <img class="fl" src="assets/ui/s_sparkle.webp" alt="" style="--x:6%;--y:16%;--z:-380px;--w:90px;--d:6s">
       <img class="fl" src="assets/ui/s_star_b.webp" alt="" style="--x:44%;--y:8%;--z:-260px;--w:70px;--d:8s;--dl:-2s">
       <img class="fl" src="assets/ui/s_pxheart.webp" alt="" style="--x:88%;--y:14%;--z:-200px;--w:84px;--d:7s;--dl:-1s">
@@ -741,10 +743,10 @@ button { font: inherit; color: inherit; }
   <!-- character select -->
   <section class="stage cs" id="characters" data-sec="chars" data-cam="20,12,4,7,6,140">
     <div class="cam" aria-hidden="true">
-      <div class="bgp csbg on" data-c="0" style="background-image:url(assets/ui/bg_hero.webp);--z:-760px;--s:1.75"></div>
-      <div class="bgp csbg" data-c="1" style="background-image:url(assets/ui/bg_alki.webp);--z:-760px;--s:1.75"></div>
-      <div class="bgp csbg r1" data-c="2" style="background-image:url(assets/ui/bg_alki.webp);--z:-760px;--s:1.75"></div>
-      <div class="bgp csbg ka" data-c="3" style="background-image:url(assets/ui/bg_alki.webp);--z:-760px;--s:1.75"></div>
+      <div class="bgp csbg on" data-c="0" data-loop="hero" style="background-image:url(assets/ui/bg_hero.webp);--z:-760px;--s:1.75"></div>
+      <div class="bgp csbg" data-c="1" data-loop="alki" style="background-image:url(assets/ui/bg_alki.webp);--z:-760px;--s:1.75"></div>
+      <div class="bgp csbg r1" data-c="2" data-loop="alki" style="background-image:url(assets/ui/bg_alki.webp);--z:-760px;--s:1.75"></div>
+      <div class="bgp csbg ka" data-c="3" data-loop="alki" style="background-image:url(assets/ui/bg_alki.webp);--z:-760px;--s:1.75"></div>
       <div class="cs-names a"><div class="tk" id="nameA"></div></div>
       <div class="cs-names b"><div class="tk" id="nameB"></div></div>
       <div class="cs-ring" id="csRing"><i></i><i></i><i></i></div>
@@ -858,7 +860,7 @@ button { font: inherit; color: inherit; }
   <!-- gameplay -->
   <section class="stage play" id="gameplay" data-sec="play" data-cam="22,12,5,8,8,160">
     <div class="cam" aria-hidden="true">
-      <div class="bgp" style="background-image:url(assets/ui/bg_play.webp);--z:-900px;--s:1.95"></div>
+      <div class="bgp" data-loop="play" style="background-image:url(assets/ui/bg_play.webp);--z:-900px;--s:1.95"></div>
       <div class="tunnel" id="tunnel">
         <div class="screen3d a"><img src="assets/shot_play.webp" alt="" width="1600" height="900" loading="lazy"></div>
         <div class="screen3d b"><img src="assets/shot_play2.webp" alt="" width="1600" height="900" loading="lazy"></div>
@@ -922,7 +924,7 @@ button { font: inherit; color: inherit; }
   <!-- Alki's highway -->
   <section class="stage hw" id="highway" data-sec="hw" data-cam="18,10,4,6,6,140">
     <div class="cam" aria-hidden="true">
-      <div class="bgp" style="background-image:url(assets/ui/bg_alki.webp);--z:-900px;--s:1.95"></div>
+      <div class="bgp" data-loop="alki" style="background-image:url(assets/ui/bg_alki.webp);--z:-900px;--s:1.95"></div>
       <div class="road">
         <i class="gem" style="left:29.5%;--gd:-.2s"></i><i class="gem" style="left:50%;--gd:-.9s;--gc:#ffffff"></i><i class="gem" style="left:70.5%;--gd:-1.5s"></i>
         <i class="gem" style="left:9.5%;--gd:-2.1s"></i><i class="gem" style="left:90.5%;--gd:-.6s"></i><i class="gem" style="left:50%;--gd:-1.8s"></i>
@@ -982,7 +984,7 @@ button { font: inherit; color: inherit; }
   <!-- WORLD -->
   <section class="stage world" id="world" data-sec="world" data-cam="18,10,3,6,5,120">
     <div class="cam" aria-hidden="true">
-      <div class="bgp" style="background-image:url(assets/ui/bg_world.webp);--z:-760px;--s:1.75"></div>
+      <div class="bgp" data-loop="world" style="background-image:url(assets/ui/bg_world.webp);--z:-760px;--s:1.75"></div>
       <img class="cloud3d" src="assets/ui/s_cloud.webp" alt="" style="--w:200px;--x:6%;--y:10%;--z:-420px;--d:44s">
       <img class="cloud3d" src="assets/ui/s_cloud.webp" alt="" style="--w:150px;--x:70%;--y:6%;--z:-260px;--d:36s">
       <img class="cloud3d" src="assets/ui/s_cloud.webp" alt="" style="--w:120px;--x:46%;--y:40%;--z:-120px;--d:30s">
@@ -1224,6 +1226,33 @@ function anchors() {
   placeTargets();
 }
 
+/* ---------- living backgrounds: short seamless clips animated from each screen's background art ---------- */
+(function () {
+  const saveData = navigator.connection && navigator.connection.saveData;
+  if (reduce || saveData) return;
+  const vids = [], ext = document.createElement('video').canPlayType('video/mp4; codecs="avc1.640028"') ? 'mp4' : 'webm';
+  $$('.bgp[data-loop]').forEach(bg => {
+    const v = document.createElement('video');
+    v.className = 'loop'; v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'none';
+    v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('aria-hidden', 'true');
+    v.src = `assets/ui/loop_${bg.dataset.loop}.${ext}`;
+    v.addEventListener('playing', () => v.classList.add('on'));
+    bg.appendChild(v); vids.push(v);
+  });
+  if (!vids.length) return;
+  const near = new Set();
+  const sync = v => {
+    const bg = v.parentElement, st = bg.closest('.stage');
+    const show = !document.hidden && near.has(st) && (!bg.classList.contains('csbg') || bg.classList.contains('on'));
+    if (show) { if (v.paused) v.play().catch(() => {}); } else if (!v.paused) v.pause();
+  };
+  const all = () => vids.forEach(sync);
+  const lio = new IntersectionObserver(es => { es.forEach(e => e.isIntersecting ? near.add(e.target) : near.delete(e.target)); all(); }, { rootMargin: '150px 0px' });
+  new Set(vids.map(v => v.closest('.stage'))).forEach(s => lio.observe(s));
+  document.addEventListener('visibilitychange', all);
+  window.__syncLoops = all;
+})();
+
 /* ---------- titles slam in once, then float ---------- */
 const tio = new IntersectionObserver(es => es.forEach(e => {
   if (!e.isIntersecting) return; const t = e.target; tio.unobserve(t); if (reduce) return;
@@ -1322,6 +1351,7 @@ function setChar(i, dir = 1, user = true) {
   }
   setTimeout(() => {
     $$('.csbg').forEach(b => b.classList.toggle('on', +b.dataset.c === i));
+    if (window.__syncLoops) window.__syncLoops();
     for (const k in c.t) cs.style.setProperty('--' + k, c.t[k]);
     cs.classList.toggle('dk', c.dark);
     names(c.name);
