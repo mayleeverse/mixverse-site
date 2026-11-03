@@ -10,12 +10,16 @@
 <link rel="icon" href="assets/mark.webp">
 <title>MiXVERSE</title>
 <meta name="description" content="MiXVERSE is a kawaii rhythm game for Windows PC by mayleeverse. The pre-alpha is out now.">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Dela+Gothic+One&family=DotGothic16&family=M+PLUS+Rounded+1c:wght@500;800;900&family=Rampart+One&family=VT323&display=swap">
+<meta name="color-scheme" content="only light">
+<meta name="theme-color" content="#ff8cc6">
 <style>
 html, body { margin: 0; }
+img { max-width: 100%; }
 [hidden] { display: none !important; }
+</style>
+<link rel="preload" href="assets/fonts/TitanOne-Regular.woff" as="font" type="font/woff" crossorigin>
+<link rel="preload" href="assets/fonts/Nunito.woff" as="font" type="font/woff" crossorigin>
+<style>
 /* Layout: every band is a game screen built as a small 3D set. Its art (backgrounds, stickers, characters, note lanes)
    sits on layers at different depths inside a camera that moves with the mouse and the scroll; the UI (titles, windows,
    buttons, text) stays flat in front, like the game's own HUD. Torn paper strips stitch the screens together and a
@@ -45,7 +49,6 @@ html, body { margin: 0; }
   --s0: clamp(1rem, .96rem + .2vw, 1.1rem);
   --s1: clamp(1.15rem, 1.05rem + .45vw, 1.4rem);
   --s2: clamp(1.4rem, 1.2rem + 1vw, 2rem);
-  color-scheme: light;
 }
 @property --ca { syntax: "<color>"; inherits: true; initial-value: #ff4fa0; }
 @property --cb { syntax: "<color>"; inherits: true; initial-value: #7cc9f5; }
@@ -68,15 +71,12 @@ button { font: inherit; color: inherit; }
 @media (min-width: 760px) { .wrap { padding-left: max(32px, env(safe-area-inset-left, 0px)); padding-right: max(32px, env(safe-area-inset-right, 0px)); } }
 
 /* ---------- the moving halftone screen over everything ---------- */
-#ht { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 45; pointer-events: none; }
 
 /* ---------- 3D sets ---------- */
 .stage { position: relative; overflow: hidden; perspective: 1100px; perspective-origin: 50% 42%; isolation: isolate; }
 .cam { position: absolute; inset: 0; transform-style: preserve-3d; pointer-events: none; will-change: transform; z-index: 0; }
 .cam > * { position: absolute; }
 .bgp { inset: -12%; background: center / cover no-repeat; transform: translateZ(var(--z, -650px)) scale(var(--s, 1.45)); backface-visibility: hidden; }
-.bgp > video.loop { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity .9s ease; pointer-events: none; }
-.bgp > video.loop.on { opacity: 1; }
 .fl { left: var(--x); top: var(--y); width: var(--w, 64px); transform: translateZ(var(--z, 0px)); animation: drift var(--d, 7s) ease-in-out var(--dl, 0s) infinite alternate; filter: drop-shadow(0 8px 6px rgba(58, 42, 122, .18)); }
 @keyframes drift { from { translate: 0 0; rotate: -8deg; } to { translate: 0 -26px; rotate: 10deg; } }
 .ui { position: relative; z-index: 2; }
@@ -186,10 +186,13 @@ button { font: inherit; color: inherit; }
 .hero-hit { position: absolute; left: 0; top: 0; width: 48%; height: 100%; background: none; border: 0; cursor: pointer; z-index: 3; }
 .hero-copy { grid-column: 2; display: grid; justify-items: stretch; text-align: center; gap: 14px; min-width: 0; }
 .hero-copy > * { margin-inline: auto; max-width: 100%; }
-.hero-copy .logo { width: min(100%, 600px); margin-inline: auto; filter: drop-shadow(0 16px 20px rgba(58, 42, 122, .25)); }
+.hero-copy .logo { width: min(100%, 540px); margin-inline: auto; filter: drop-shadow(0 16px 20px rgba(58, 42, 122, .25)); }
 .hero-copy .stamp { margin-top: -6px; display: block; }
 .hero-copy .stamp .ttl { margin-inline: auto; }
-.hero-copy .stamp .ttl { --tw: 470px; }
+.hero-copy .stamp .ttl { --tw: 410px; }
+.hero-copy { gap: 10px !important; }
+.hero-copy .rib { --h: 44px; }
+.hero-copy .lead { font-size: clamp(1rem, .92rem + .35vw, 1.2rem); padding: .55em .95em .6em; }
 .hero-copy .lead { text-align: center; }
 .ctas { display: flex; flex-wrap: wrap; gap: 14px 16px; justify-content: center; }
 .meta { margin: 0; font-family: var(--f-pix); font-size: .95rem; letter-spacing: .06em; color: var(--ink-soft); }
@@ -203,7 +206,6 @@ button { font: inherit; color: inherit; }
 
 /* ---------- trailer ---------- */
 .trailer { background: #ffd9ec; }
-.trailer .bgp { animation: spinbg 120s linear infinite; }
 @keyframes spinbg { to { rotate: 360deg; } }
 .tr-grid { display: grid; grid-template-columns: minmax(0, .8fr) minmax(0, 1.5fr); gap: clamp(26px, 4vw, 60px); align-items: center; }
 .tr-grid .ttl { --tw: 520px; }
@@ -234,8 +236,9 @@ button { font: inherit; color: inherit; }
 .cs-ring i:nth-child(2) { inset: 12%; border: 3px solid var(--cb); animation-duration: 9s; animation-direction: reverse; box-shadow: 0 0 0 10px color-mix(in srgb, var(--cb) 30%, transparent) inset; }
 .cs-ring i:nth-child(3) { inset: 26%; border: 0; background: radial-gradient(circle, color-mix(in srgb, var(--ca) 55%, transparent), transparent 70%); animation: none; }
 @keyframes ringspin { to { rotate: 360deg; } }
-.cs-fig { left: var(--fx); top: var(--fy); width: var(--fw); height: var(--fh); transform: translateZ(0); transform-style: preserve-3d; display: grid; place-items: end center; }
-.cs-fig .figi { height: 100%; transform-style: preserve-3d; display: grid; place-items: end center; }
+.cs-fig { left: var(--fx); top: var(--fy); width: var(--fw); height: var(--fh); transform: translateZ(0); transform-style: preserve-3d; display: grid; grid-template: minmax(0, 1fr) / minmax(0, 1fr); place-items: end center; }
+/* (the rows are pinned to the spot's height, so the figure is sized by the spot and never by the picture's own pixels) */
+.cs-fig .figi { height: 100%; min-height: 0; transform-style: preserve-3d; display: grid; grid-template: minmax(0, 1fr) / auto; place-items: end center; }
 .cs-fig img { height: 100%; width: auto; max-width: none; filter: drop-shadow(0 18px 14px rgba(0, 0, 0, .35)); animation: breathe 3.2s ease-in-out infinite; transform-origin: 50% 100%; }
 @keyframes breathe { 50% { scale: 1.012 .992; translate: 0 -4px; } }
 .cs-burst { left: var(--fx); top: calc(var(--fy) + var(--fh) / 2 - var(--fw) / 2); width: var(--fw); height: var(--fw); transform: translateZ(-30px) scale(1.4); border-radius: 50%; opacity: 0; background-image: radial-gradient(var(--ca) 30%, transparent 33%); background-size: 16px 16px; -webkit-mask: radial-gradient(circle, transparent 34%, #000 44%, transparent 66%); mask: radial-gradient(circle, transparent 34%, #000 44%, transparent 66%); }
@@ -513,7 +516,6 @@ button { font: inherit; color: inherit; }
 
 /* ---------- level up ---------- */
 .lvl { background: #fff4c4; }
-.lvl .bgp { filter: hue-rotate(48deg) saturate(1.15) brightness(1.06); animation: spinbg 150s linear infinite reverse; }
 .lvl .ttl { --tw: 440px; }
 .lvl-grid { margin-top: 20px; display: grid; grid-template-columns: minmax(0, .75fr) minmax(0, 1.25fr); gap: clamp(20px, 4vw, 50px); align-items: start; }
 .lvl-ctrl { display: grid; gap: 12px; }
@@ -548,7 +550,6 @@ button { font: inherit; color: inherit; }
 
 /* ---------- download ---------- */
 .dl { background: #ffc4df; }
-.dl .bgp { animation: spinbg 110s linear infinite; }
 .crew { left: var(--fx); top: var(--fy); width: var(--fw); height: var(--fh); transform-style: preserve-3d; }
 .crew img { position: absolute; bottom: 0; height: 92%; width: auto; max-width: none; filter: drop-shadow(0 18px 14px rgba(58, 42, 122, .28)); }
 .dl-head { display: grid; justify-items: center; text-align: center; gap: 12px; }
@@ -634,11 +635,185 @@ button { font: inherit; color: inherit; }
   .rage .meter i { transform: scaleX(1); }
   #ht { display: none; }
 }
+/* =====================================================================================================
+   v3: the game's own type, hand-tweened vector sets, rigged characters, the boot sequence
+   ===================================================================================================== */
+@font-face { font-family: "Titan One"; src: url(assets/fonts/TitanOne-Regular.woff) format("woff"); font-display: block; }
+@font-face { font-family: "Nunito"; src: url(assets/fonts/Nunito.woff) format("woff"); font-weight: 200 1000; font-display: block; }
+@font-face { font-family: "Pixelify Sans"; src: url(assets/fonts/PixelifySans.woff) format("woff"); font-weight: 400 700; font-display: block; }
+@font-face { font-family: "VT323"; src: url(assets/fonts/VT323-Regular.woff) format("woff"); font-display: block; }
+:root {
+  --f-ui: "Titan One", "Lilita One", "Arial Rounded MT Bold", sans-serif;
+  --f-body: "Nunito", ui-rounded, "Hiragino Maru Gothic ProN", "Yu Gothic", sans-serif;
+  --f-pix: "Pixelify Sans", "Courier New", monospace;
+  --f-big: "Titan One", "Arial Rounded MT Bold", sans-serif;
+  --f-vhs: "VT323", "Courier New", monospace;
+  --B: .5714s;             /* one beat of the menu theme (105 BPM): every tween on the page is timed in beats */
+  color-scheme: only light;
+}
+/* phones that darken pages on their own: this page is light only, and says so */
+@media (prefers-color-scheme: dark) { :root { color-scheme: only light; } html, body { background: #ffeaf4; color: #3a2a7a; } }
+html { background: #ffeaf4; }
+body { font-weight: 800; font-synthesis: none; }
+
+
+/* new sections: music videos, cars */
+.ttl-txt { margin: 0; font-size: clamp(2.6rem, 7vw, 5.4rem); line-height: .95; --sw: .14em; --sd: .1em; transform: rotate(-3deg); display: inline-block; }
+.mv-head { max-width: 760px; margin-bottom: 26px; }
+.mv-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 22px; }
+.mvw { margin: 0; transform: rotate(var(--rr, 0deg)); }
+.mvw .scr { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-radius: 8px; background: var(--ink); }
+.mvw .scr img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s cubic-bezier(.2,.8,.2,1); }
+.mvw:hover .scr img { transform: scale(1.06); }
+.mvw figcaption { padding: 10px 4px 2px; font-size: .95rem; line-height: 1.35; color: var(--ink); }
+.cars-grid { display: grid; grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); gap: 24px; align-items: start; }
+@media (max-width: 860px) { .cars-grid { grid-template-columns: 1fr; } }
+.gshots { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.gshots .scr { aspect-ratio: 16 / 9; overflow: hidden; border-radius: 8px; }
+.gshots .scr img { width: 100%; height: 100%; object-fit: cover; object-position: 70% 50%; }
+.garage-win .chips { margin: 14px 0 6px; }
+.garage-win p { margin: 8px 0 0; color: var(--ink); line-height: 1.45; }
+.carlist ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
+.carrow { display: grid; grid-template-columns: auto 1fr; gap: 2px 12px; padding: 10px 14px; border-radius: 16px; background: #fff; box-shadow: inset 6px 0 0 var(--cc); }
+.carrow b { font-family: var(--f-ui); font-weight: 400; font-size: 1.15rem; color: var(--cc); -webkit-text-stroke: 4px #fff; paint-order: stroke fill; }
+.carrow .own { justify-self: end; align-self: center; font-family: var(--f-ui); font-weight: 400; font-size: .8rem; color: #fff; background: var(--cc); padding: .15em .7em; border-radius: 99px; }
+.carrow .cd { grid-column: 1 / -1; font-size: .9rem; color: var(--ink-soft); line-height: 1.35; }
+@media (max-width: 640px) and (orientation: portrait) { .tv .screen.vert { aspect-ratio: 9 / 16; max-height: 80vh; margin: 0 auto; } }
+/* the game's lettering: white letters with a fat coloured rim and a hard shadow under them */
+.stk { color: #fff; -webkit-text-stroke: var(--sw, .16em) var(--sc, #ff5fa2); paint-order: stroke fill; text-shadow: 0 var(--sd, .12em) 0 var(--sc, #ff5fa2); font-family: var(--f-ui); font-weight: 400; letter-spacing: .02em; }
+.btn { font-family: var(--f-ui); font-weight: 400; letter-spacing: .05em; -webkit-text-stroke: 5px #c21f6e; paint-order: stroke fill; text-shadow: 0 3px 0 #c21f6e; }
+.btn.blue { -webkit-text-stroke-color: #0d6fa8; text-shadow: 0 3px 0 #0d6fa8; }
+.btn svg { filter: drop-shadow(0 0 0 #c21f6e) drop-shadow(1.5px 1.5px 0 #c21f6e) drop-shadow(-1.5px -1.5px 0 #c21f6e) drop-shadow(0 3px 0 #c21f6e); }
+.btn.blue svg { filter: drop-shadow(1.5px 1.5px 0 #0d6fa8) drop-shadow(-1.5px -1.5px 0 #0d6fa8) drop-shadow(0 3px 0 #0d6fa8); }
+.nav-links a, .music, .chip, .kc, .ctrlbar, .foot nav a { font-family: var(--f-ui); font-weight: 400; }
+.nav-links a { font-size: .92rem; letter-spacing: .05em; }
+
+/* lead lines sit on the game's tip cards (white, pink rim, ink letters), never loose on a busy background */
+.lead { display: block; width: fit-content; max-width: min(46ch, 100%); padding: .7em 1.05em .75em; border-radius: 20px; background: #fff; border: 3px solid #ff8cc6; box-shadow: 0 5px 0 #ff8cc6, 0 14px 26px -12px rgba(58, 42, 122, .35);
+  font-family: var(--f-body); font-weight: 900; font-size: var(--s1); line-height: 1.38; color: #4b2a86; rotate: -.6deg; }
+.copy { display: block; width: fit-content; max-width: min(60ch, 100%); padding: .65em 1em .7em; border-radius: 16px; background: rgba(255, 255, 255, .94); border: 2.5px solid #ffc2df; font-family: var(--f-body); font-weight: 800; color: #4b2a86; line-height: 1.5; }
+.hero-copy .lead { margin-inline: auto; }
+.cs.dk .lead, .hw .lead { background: #1a1016; border-color: var(--ca, #e3173b); box-shadow: 0 5px 0 var(--ca, #e3173b), 0 14px 26px -12px rgba(0, 0, 0, .6); color: #fbe9ee; }
+.hw .copy { background: rgba(26, 16, 22, .92); border-color: #6b2a38; color: #f3dfe4; }
+.play .copy, .play-copy .copy { background: rgba(255, 255, 255, .95); color: #4b2a86; }
+.label { font-family: var(--f-pix); font-weight: 700; letter-spacing: .1em; font-size: 1rem; }
+.win > .wt { font-family: var(--f-pix); font-weight: 700; font-size: 1.1rem; letter-spacing: .08em; }
+/* the specs line under the buttons: pixel pills like the game's PRESS ANY KEY button */
+.meta { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; margin: 2px 0 0; padding: 0; list-style: none; }
+.meta li { padding: 6px 13px 7px; border-radius: 999px; background: #ff5fa2; color: #fff; font-family: var(--f-pix); font-weight: 700; font-size: .95rem; letter-spacing: .06em; box-shadow: 0 4px 0 #c21f6e; line-height: 1; }
+.meta li:nth-child(2) { background: #2f9fe0; box-shadow: 0 4px 0 #1b6fa6; }
+.meta li:nth-child(3) { background: #a98bf0; box-shadow: 0 4px 0 #7a5bc4; }
+.meta li:nth-child(4) { background: #ffe46b; color: #3a2a7a; box-shadow: 0 4px 0 #e0b92c; }
+.torn .tk { font-family: var(--f-ui); -webkit-text-stroke: 5px #d92a7c; paint-order: stroke fill; text-shadow: 0 4px 0 #d92a7c; letter-spacing: .05em; }
+.cs-names span { font-family: var(--f-ui); }
+.toast { font-family: var(--f-ui); font-weight: 400; letter-spacing: .03em; }
+
+/* ---------- ribbons: drawn as vector banners, the words follow the bend ---------- */
+.rib { --h: 52px; display: inline-block; height: auto; padding: 0; border: 0; border-image: none; background: none; text-shadow: none; line-height: 0; color: transparent; font-size: 0; }
+.rib svg.ribsvg { display: block; height: calc(var(--h) * 1.5); width: auto; max-width: 100%; overflow: visible; filter: drop-shadow(0 6px 0 rgba(58, 42, 122, .18)); }
+.rib .rb-band { animation: ribwave calc(var(--B) * 4) ease-in-out infinite; transform-origin: 50% 50%; transform-box: fill-box; }
+@keyframes ribwave { 0%, 100% { transform: rotate(-.8deg); } 50% { transform: rotate(.8deg) translateY(-2px); } }
+.rib text { font-family: var(--f-ui); paint-order: stroke fill; stroke-linejoin: round; }
+@media (max-width: 560px) { .rib { --h: 40px; } }
+
+/* ---------- vector sets: crisp at any size, every piece keyed by hand ---------- */
+.bgp.vec { background: none; overflow: hidden; }
+.bgp.vec > .sc { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.bgp.vec > .ht { position: absolute; inset: -40px; background-image: radial-gradient(var(--htc, rgba(255, 95, 162, .22)) 32%, transparent 36%); background-size: 22px 22px; -webkit-mask: var(--htm, linear-gradient(180deg, #000, transparent 46%, transparent 64%, #000)); mask: var(--htm, linear-gradient(180deg, #000, transparent 46%, transparent 64%, #000)); animation: htmove calc(var(--B) * 8) linear infinite; }
+@keyframes htmove { to { transform: translate(22px, 22px); } }
+.pc { position: absolute; left: var(--x); top: var(--y); width: var(--w); aspect-ratio: var(--ar, 1); color: var(--c, #ff5fa2); transform-origin: var(--to, 50% 50%); animation: var(--an) calc(var(--B) * var(--n, 2)) var(--ez, ease-in-out) calc(var(--B) * var(--dl, 0)) infinite both; pointer-events: none; }
+.pc > svg { width: 100%; height: 100%; display: block; overflow: visible; }
+.stage.off .pc, .stage.off .bgp.vec > .ht, .stage.off .bgp.vec .spin, .stage.off .gfloor, .stage.off .pupw canvas { animation-play-state: paused; }
+.pc.txt { width: auto; aspect-ratio: auto; font-family: var(--f-body); font-weight: 700; font-size: clamp(11px, .8vw, 14px); line-height: 1.7; letter-spacing: .32em; text-transform: uppercase; white-space: nowrap; }
+.pc.txt i { display: block; width: 26px; height: 2px; background: currentColor; margin-top: 6px; }
+/* the tweens: holds, overshoots and settles, all on the beat */
+@keyframes t-hop { 0% { transform: translateY(0) scale(1, 1); } 8% { transform: translateY(0) scale(1.14, .84); } 30% { transform: translateY(-34%) scale(.9, 1.12); } 52% { transform: translateY(0) scale(1.12, .88); } 62% { transform: translateY(0) scale(.96, 1.04); } 72%, 100% { transform: none; } }
+@keyframes t-pulse { 0% { transform: scale(1.22) rotate(-4deg); } 22% { transform: scale(.94) rotate(2deg); } 40% { transform: scale(1.03); } 55%, 100% { transform: scale(1); } }
+@keyframes t-step { 0% { transform: rotate(0deg); } 7% { transform: rotate(104deg); } 11%, 25% { transform: rotate(90deg); } 32% { transform: rotate(194deg); } 36%, 50% { transform: rotate(180deg); } 57% { transform: rotate(284deg); } 61%, 75% { transform: rotate(270deg); } 82% { transform: rotate(374deg); } 86%, 100% { transform: rotate(360deg); } }
+@keyframes t-slide { 0%, 35% { transform: translate(0, 0); } 50%, 85% { transform: translate(var(--dx, 30px), var(--dy, -18px)); } 100% { transform: translate(0, 0); } }
+@keyframes t-twinkle { 0% { transform: scale(0) rotate(0deg); opacity: 0; } 14% { transform: scale(1.25) rotate(30deg); opacity: 1; } 26% { transform: scale(1) rotate(45deg); } 58% { transform: scale(1) rotate(45deg); opacity: 1; } 74%, 100% { transform: scale(0) rotate(90deg); opacity: 0; } }
+@keyframes t-sway { 0%, 100% { transform: rotate(calc(var(--a, 6deg) * -1)); } 50% { transform: rotate(var(--a, 6deg)); } }
+@keyframes t-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(var(--dy, -14px)); } }
+@keyframes t-blink { 0%, 30% { opacity: 1; transform: scale(1); } 34% { opacity: .2; transform: scale(.8); } 60%, 100% { opacity: 1; transform: scale(1); } }
+@keyframes t-cross { from { transform: translateX(0); } to { transform: translateX(var(--dx, 140vw)); } }
+@keyframes t-drip { 0% { transform: scaleY(.35); } 55% { transform: scaleY(1); } 80% { transform: scaleY(1.04); } 100% { transform: scaleY(.35); } }
+@keyframes t-fall { 0% { transform: translateY(-20vh) rotate(0deg); } 100% { transform: translateY(var(--dy, 140vh)) rotate(var(--a, 540deg)); } }
+@keyframes t-glow { 0%, 100% { transform: scale(1); opacity: .85; } 50% { transform: scale(1.06); opacity: 1; } }
+@keyframes t-flap { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(-.55); } }
+@keyframes t-spin { to { transform: rotate(360deg); } }
+@keyframes t-nod { 0%, 100% { transform: rotate(0); } 12% { transform: rotate(var(--a, 10deg)); } 24% { transform: rotate(calc(var(--a, 10deg) * -.4)); } 36%, 100% { transform: rotate(0); } }
+.bgp.vec .spin { position: absolute; left: 50%; top: 50%; width: 220%; aspect-ratio: 1; translate: -50% -50%; animation: t-spin calc(var(--B) * 64) linear infinite; }
+.bgp.vec .spin svg { width: 100%; height: 100%; display: block; }
+/* the neon floor scrolls exactly one tile every two beats */
+.gfloor { position: absolute; left: -60%; right: -60%; bottom: -2%; height: 46%; transform: perspective(360px) rotateX(68deg); transform-origin: 50% 100%;
+  background-image: linear-gradient(rgba(255, 92, 230, .95) 3px, transparent 3px), linear-gradient(90deg, rgba(255, 92, 230, .95) 3px, transparent 3px); background-size: 90px 90px; background-position: 50% 0;
+  -webkit-mask: linear-gradient(transparent, #000 28%); mask: linear-gradient(transparent, #000 28%); animation: gscroll calc(var(--B) * 2) linear infinite; }
+@keyframes gscroll { to { background-position: 50% 90px; } }
+.scan { position: absolute; inset: 0; background: repeating-linear-gradient(0deg, rgba(0, 0, 0, .28) 0 2px, transparent 2px 5px); animation: scanmove calc(var(--B) * 8) linear infinite; }
+@keyframes scanmove { to { background-position: 0 50px; } }
+
+/* ---------- rigged characters: a canvas over the picture, the picture keeps the layout ---------- */
+.pupw { position: relative; display: block; width: fit-content; height: 100%; }
+.hero-girl .pupw { margin-left: auto; }
+.hero-girl .pupw > canvas { filter: drop-shadow(14px 0 0 rgba(255, 255, 255, .95)) drop-shadow(0 30px 30px rgba(58, 42, 122, .25)); }
+.cs-fig .pupw > canvas { filter: drop-shadow(0 18px 14px rgba(0, 0, 0, .35)); }
+.crew .pupw { position: absolute; bottom: 0; height: 92%; }
+.crew .pupw > img { position: static; height: 100%; filter: none; }
+.crew .pupw > canvas { filter: drop-shadow(0 18px 14px rgba(58, 42, 122, .28)); }
+.car .it .pupw { translate: -50% 0; }
+.car .it .pupw > img { translate: none; filter: none; }
+.car .it .pupw > canvas { filter: drop-shadow(0 18px 14px rgba(58, 42, 122, .25)); }
+.cs { --bgc: #fff0f7; --c2: #ffd0e7; --c3: #bfe5fb; }
+.lvl { --r0: #fffbea; --r1: #ffe9a6; --r2: #ffd25c; --r3: #ffb84d; }
+.pc .flap { animation: t-flap calc(var(--B) * .5) ease-in-out infinite; }
+.pc .spin2 { animation: t-spin calc(var(--B) * 16) linear infinite; }
+.boot .bgp { position: absolute; inset: 0; transform: none; }
+.pupw > img { visibility: hidden; height: 100%; width: auto; max-width: none; }
+.pupw > canvas { position: absolute; left: -12%; top: -8%; width: 124%; height: 110%; pointer-events: none; }
+.pupw.nogl > img { visibility: visible; }
+.pupw.nogl > canvas { display: none; }
+.hero-girl .pupw { animation: none; }
+.hero-girl img, .cs-fig img { animation: none; }
+
+/* ---------- the boot: logo, then the game's loading screen, then the page ---------- */
+html.booting, html.booting body { overflow: hidden; }
+.boot { position: fixed; inset: 0; z-index: 200; background: #fff; display: grid; place-items: center; overflow: hidden; cursor: pointer; }
+.boot[hidden] { display: none; }
+.boot { animation: bootfail .3s 14s forwards; }
+@keyframes bootfail { to { opacity: 0; visibility: hidden; } }
+.boot .b-logo, .boot .b-load { position: absolute; inset: 0; }
+.boot .b-logo { display: grid; place-items: center; background: linear-gradient(160deg, #fff 30%, #fff0f8); }
+.boot .b-logo .bg { position: absolute; inset: 0; }
+.boot .b-mv { position: relative; width: min(620px, 76vw); filter: drop-shadow(0 14px 18px rgba(58, 42, 122, .25)); }
+.boot .b-tag { position: absolute; left: 50%; top: calc(50% + min(170px, 22vw)); translate: -50% 0; font-family: var(--f-body); font-weight: 800; font-size: clamp(11px, 1.6vw, 16px); letter-spacing: .5em; color: #3a2a7a; white-space: nowrap; }
+.boot .b-tag b { color: #ff5fa2; font-weight: 900; }
+.boot .b-load { opacity: 0; }
+.boot .b-load canvas.sky { position: absolute; inset: 0; width: 100%; height: 100%; }
+.boot .vids video { position: absolute; left: 0; top: 0; width: 4px; height: 4px; opacity: .01; pointer-events: none; }
+.boot .chase { position: absolute; left: 0; top: 0; width: 0; height: 0; pointer-events: none; }
+.boot .b-run { position: absolute; left: 0; right: 0; bottom: 26%; height: 46%; }
+.boot .b-run .pupw { position: absolute; bottom: 0; height: 100%; left: 18%; }
+.boot .b-run .plush { position: absolute; bottom: 2%; left: 62%; width: min(150px, 20vw); transform-origin: 50% 100%; filter: drop-shadow(0 8px 6px rgba(160, 60, 120, .25)); }
+.boot .b-run .shad { position: absolute; bottom: -1.5%; height: 4%; border-radius: 50%; background: rgba(138, 90, 158, .22); }
+.boot .lt { position: absolute; left: max(22px, 3.2vw); bottom: calc(max(22px, 3.2vw) + 42px); display: flex; gap: 2px; font: 400 clamp(34px, 4.4vw, 56px)/1 var(--f-ui); color: #fff; -webkit-text-stroke: 5px #ff5fa2; paint-order: stroke fill; text-shadow: 0 5px 0 #ff5fa2; }
+.boot .lt span { display: inline-block; animation: g-hop .9s ease-in-out infinite; }
+@keyframes g-hop { 0% { transform: translateY(0); animation-timing-function: cubic-bezier(.3, 0, .4, 1); } 12% { transform: translateY(2px) scaleY(.94); animation-timing-function: cubic-bezier(.2, .8, .4, 1); } 32% { transform: translateY(-14px) rotate(-6deg); animation-timing-function: cubic-bezier(.5, 0, .8, .5); } 54% { transform: translateY(0); animation-timing-function: cubic-bezier(.2, .8, .4, 1); } 62% { transform: translateY(1px) scaleY(.97); } 72%, 100% { transform: translateY(0); } }
+.boot .lb { position: absolute; left: max(24px, 3.4vw); bottom: max(22px, 3.2vw); width: min(420px, 60vw); height: 18px; border-radius: 99px; background: rgba(255, 255, 255, .85); border: 3px solid #fff; box-shadow: 0 3px 0 #ff8cc6; overflow: hidden; }
+.boot .lb i { display: block; height: 100%; width: 0; background: repeating-linear-gradient(45deg, #ff5fa2 0 12px, #ff8cc6 12px 24px); background-size: 34px 34px; animation: lbmove .6s linear infinite; }
+@keyframes lbmove { to { background-position: 34px 0; } }
+.boot .lp { position: absolute; left: calc(max(24px, 3.4vw) + min(420px, 60vw) + 14px); bottom: calc(max(22px, 3.2vw) - 2px); font: 400 24px/1 var(--f-ui); color: #ff5fa2; -webkit-text-stroke: 4px #fff; paint-order: stroke fill; }
+.boot .tip { position: absolute; right: max(18px, 3vw); bottom: max(20px, 3vw); max-width: min(520px, 44vw); padding: 10px 18px; border-radius: 16px; background: rgba(255, 255, 255, .94); border: 3px solid #ff8cc6; font: 800 clamp(13px, 1.2vw, 16px)/1.35 var(--f-body); color: #6a3a8e; }
+.boot .skip { position: absolute; right: max(18px, 3vw); top: max(18px, 3vw); font: 700 13px/1 var(--f-pix); letter-spacing: .12em; color: #ff5fa2; opacity: .8; }
+.boot .wipe { position: absolute; inset: -20% -30%; display: flex; pointer-events: none; transform: translateX(-130%) skewX(-16deg); }
+.boot .wipe i { flex: 1; background: #ff5fa2; }
+.boot .wipe i:nth-child(2n) { background: #ff8cc6; } .boot .wipe i:nth-child(3n) { background: #7cc9f5; } .boot .wipe i:nth-child(5n) { background: #fff; }
+@media (max-width: 700px) {
+  .boot .tip { left: 16px; right: 16px; bottom: 110px; max-width: none; }
+  .boot .lt { bottom: 62px; } .boot .b-run { bottom: 34%; height: 36%; } .boot .b-run .pupw { left: 6%; } .boot .b-run .plush { left: 64%; }
+}
+@media (prefers-reduced-motion: reduce) { .pc, .bgp.vec > .ht, .gfloor, .scan, .bgp.vec .spin { animation: none !important; } }
 </style>
 
-
-</head>
-<body>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <symbol id="i-play" viewBox="0 0 24 24"><path d="M6 3.5v17l14.5-8.5z"/></symbol>
   <symbol id="i-pause" viewBox="0 0 24 24"><path d="M5.5 3.5h4.5v17H5.5zM14 3.5h4.5v17H14z"/></symbol>
@@ -653,7 +828,19 @@ button { font: inherit; color: inherit; }
   <symbol id="i-ch" viewBox="0 0 24 24"><path d="M3 5h18v13H3zm2 2v9h14V7zM8 20h8v2H8z"/></symbol>
 </svg>
 
-<canvas id="ht" aria-hidden="true"></canvas>
+<div class="boot" id="boot" aria-hidden="true">
+  <div class="b-load">
+    <canvas class="sky"></canvas>
+    <canvas class="chase"></canvas>
+    <div class="b-run" hidden><span class="shad" style="left:20%;width:12%"></span><span class="shad" style="left:62%;width:9%"></span><img class="sy" src="assets/line_syaski.webp" alt="" width="728" height="1534"><img class="plush" src="assets/mayleeverse.webp" alt=""></div>
+    <div class="lt"><span>L</span><span>O</span><span>A</span><span>D</span><span>I</span><span>N</span><span>G</span><span>.</span><span>.</span><span>.</span></div>
+    <div class="lb"><i></i></div><div class="lp">0%</div>
+    <div class="tip" id="bootTip"></div>
+  </div>
+  <div class="b-logo"><div class="bg bgp"></div><img class="b-mv" src="assets/logo.webp" alt="" width="1400" height="636"><div class="b-tag">RHYTHM <b>×</b> MUSIC <b>×</b> YOUR WORLD</div></div>
+  <div class="wipe"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>
+  <span class="skip">CLICK TO SKIP</span>
+</div>
 
 <header class="nav">
   <div class="wrap">
@@ -665,6 +852,7 @@ button { font: inherit; color: inherit; }
       <li><a href="#characters">CHARACTERS</a></li>
       <li><a href="#outfits">OUTFITS</a></li>
       <li><a href="#gameplay">GAMEPLAY</a></li>
+      <li><a href="#videos">VIDEOS</a></li>
       <li><a href="#world">WORLD</a></li>
       <li><a href="#download">DOWNLOAD</a></li>
     </ul>
@@ -679,7 +867,7 @@ button { font: inherit; color: inherit; }
   <!-- the title screen -->
   <section class="stage hero" id="top" data-cam="22,12,4,6,8,160">
     <div class="cam" aria-hidden="true">
-      <div class="bgp" data-loop="hero" style="background-image:url(assets/ui/bg_hero.webp);--z:-700px;--s:1.6"></div>
+      <div class="bgp" data-scene="hero" style="--z:-700px;--s:1.6"></div>
       <img class="fl" src="assets/ui/s_sparkle.webp" alt="" style="--x:6%;--y:16%;--z:-380px;--w:90px;--d:6s">
       <img class="fl" src="assets/ui/s_star_b.webp" alt="" style="--x:44%;--y:8%;--z:-260px;--w:70px;--d:8s;--dl:-2s">
       <img class="fl" src="assets/ui/s_pxheart.webp" alt="" style="--x:88%;--y:14%;--z:-200px;--w:84px;--d:7s;--dl:-1s">
@@ -688,7 +876,7 @@ button { font: inherit; color: inherit; }
       <img class="fl" src="assets/ui/s_star_y.webp" alt="" style="--x:92%;--y:72%;--z:80px;--w:64px;--d:5.5s;--dl:-2s">
       <img class="fl" src="assets/ui/s_bow.webp" alt="" style="--x:38%;--y:30%;--z:120px;--w:58px;--d:7.5s;--dl:-4s">
       <img class="fl" src="assets/ui/s_sparkle2.webp" alt="" style="--x:70%;--y:4%;--z:60px;--w:60px;--d:6s;--dl:-1s">
-      <div class="hero-girl" id="heroGirl"><img src="assets/char_syaski.webp" alt="" width="827" height="1200" id="girlImg"></div>
+      <div class="hero-girl" id="heroGirl"><img src="assets/char_syaski.webp" alt="" width="859" height="1463" id="girlImg"></div>
     </div>
     <button class="hero-hit" id="girlHit" type="button" aria-label="Say hi to Syaski"></button>
     <div class="ui">
@@ -702,7 +890,7 @@ button { font: inherit; color: inherit; }
             <a class="btn big" href="#download"><svg aria-hidden="true"><use href="#i-down"/></svg>DOWNLOAD<span class="xl">&nbsp;FOR WINDOWS</span></a>
             <a class="btn blue" href="#trailer" style="--sd:1.2s"><svg aria-hidden="true"><use href="#i-play"/></svg>WATCH<span class="xl">&nbsp;THE</span>&nbsp;TRAILER</a>
           </div>
-          <p class="meta">WINDOWS 10 &amp; 11 · 64-BIT · ABOUT 150 MB · PRE-ALPHA</p>
+          <ul class="meta"><li>WINDOWS 10 &amp; 11</li><li>64-BIT</li><li>ABOUT 400 MB</li><li>PRE-ALPHA</li></ul>
         </div>
       </div>
     </div>
@@ -713,7 +901,7 @@ button { font: inherit; color: inherit; }
   <!-- trailer -->
   <section class="stage trailer" id="trailer" data-sec="trailer" data-cam="16,10,3,5,4,120">
     <div class="cam" aria-hidden="true">
-      <div class="bgp" style="background-image:url(assets/ui/bg_burst.webp);--z:-760px;--s:1.9"></div>
+      <div class="bgp" data-scene="burst" style="--z:-760px;--s:1.9"></div>
       <img class="fl" src="assets/ui/s_play.webp" alt="" style="--x:4%;--y:12%;--z:-200px;--w:80px;--d:6s">
       <img class="fl" src="assets/ui/s_pxheart2.webp" alt="" style="--x:90%;--y:20%;--z:-100px;--w:70px;--d:7s;--dl:-2s">
       <img class="fl" src="assets/ui/s_dotball_b.webp" alt="" style="--x:8%;--y:74%;--z:60px;--w:70px;--d:8s;--dl:-1s">
@@ -723,7 +911,7 @@ button { font: inherit; color: inherit; }
       <div class="tr-grid">
         <div class="tr-text" data-rv>
           <h2 style="margin:0"><span class="ttlw" style="--img:url(assets/ui/t_trailer.webp)"><img class="ttl" src="assets/ui/t_trailer.webp" alt="Pre-alpha trailer" width="1500" height="514"></span></h2>
-          <p class="lead">Thirty seconds of the real game: all four characters, Syaski's outfits, two of the songs and WORLD.</p>
+          <p class="lead">Thirty-six seconds of the real game: all four characters, Syaski's outfits, five music videos, Alki's highway, the garage and WORLD.</p>
           <p class="label" style="margin:0;color:var(--pink-deep)">EVERY SHOT IS IN-GAME FOOTAGE</p>
         </div>
         <div class="tilt" data-rv style="--rr:2deg">
@@ -743,15 +931,12 @@ button { font: inherit; color: inherit; }
   <!-- character select -->
   <section class="stage cs" id="characters" data-sec="chars" data-cam="20,12,4,7,6,140">
     <div class="cam" aria-hidden="true">
-      <div class="bgp csbg on" data-c="0" data-loop="hero" style="background-image:url(assets/ui/bg_hero.webp);--z:-760px;--s:1.75"></div>
-      <div class="bgp csbg" data-c="1" data-loop="alki" style="background-image:url(assets/ui/bg_alki.webp);--z:-760px;--s:1.75"></div>
-      <div class="bgp csbg r1" data-c="2" data-loop="alki" style="background-image:url(assets/ui/bg_alki.webp);--z:-760px;--s:1.75"></div>
-      <div class="bgp csbg ka" data-c="3" data-loop="alki" style="background-image:url(assets/ui/bg_alki.webp);--z:-760px;--s:1.75"></div>
+      <div class="bgp" data-scene="cs" style="--z:-760px;--s:1.75"></div>
       <div class="cs-names a"><div class="tk" id="nameA"></div></div>
       <div class="cs-names b"><div class="tk" id="nameB"></div></div>
       <div class="cs-ring" id="csRing"><i></i><i></i><i></i></div>
       <div class="cs-burst" id="csBurst"></div>
-      <div class="cs-fig" id="csFig"><div class="figi" id="csFigi"><img id="csImg" src="assets/line_syaski.webp" alt="" width="640" height="927"></div></div>
+      <div class="cs-fig" id="csFig"><div class="figi" id="csFigi"><img id="csImg" src="assets/line_syaski.webp" alt="" width="728" height="1534"></div></div>
       <img class="fl" src="assets/ui/s_sparkle.webp" alt="" style="--x:30%;--y:16%;--z:-120px;--w:60px;--d:6s">
       <img class="fl" src="assets/ui/s_pxheart_o.webp" alt="" style="--x:62%;--y:70%;--z:90px;--w:56px;--d:7s;--dl:-2s">
     </div>
@@ -767,7 +952,7 @@ button { font: inherit; color: inherit; }
             <button class="card" role="tab" aria-selected="true" data-i="0" type="button"><span class="pic"><img src="assets/card_syaski.webp" alt="" width="330" height="426"></span><img class="frame" src="assets/ui/card.webp" alt=""><span class="nm">SYASKI</span><span class="p1">1P</span></button>
             <button class="card" role="tab" aria-selected="false" data-i="1" type="button"><span class="pic"><img src="assets/card_alki.webp" alt="" width="330" height="426"></span><img class="frame" src="assets/ui/card.webp" alt=""><span class="nm">ALKI</span><span class="p1">1P</span></button>
             <button class="card" role="tab" aria-selected="false" data-i="2" type="button"><span class="pic"><img src="assets/card_r1nner.webp" alt="" width="330" height="426"></span><img class="frame" src="assets/ui/card.webp" alt=""><span class="nm">R1NNER</span><span class="p1">1P</span></button>
-            <button class="card" role="tab" aria-selected="false" data-i="3" type="button"><span class="pic"><img src="assets/card_kalijero.webp" alt="" width="330" height="426"></span><img class="frame" src="assets/ui/card.webp" alt=""><span class="nm">KALIJERO</span><span class="p1">1P</span></button>
+            <button class="card" role="tab" aria-selected="false" data-i="3" type="button"><span class="pic"><img src="assets/card_carl.webp" alt="" width="330" height="426"></span><img class="frame" src="assets/ui/card.webp" alt=""><span class="nm">CARSON</span><span class="p1">1P</span></button>
             <div class="card locked" aria-label="Locked character"><span class="pic"><img src="assets/ui/s_xmark.webp" alt=""></span><img class="frame" src="assets/ui/card.webp" alt=""><span class="nm">LOCKED</span></div>
             <div class="card soon" aria-label="More characters coming soon"><span class="pic">?</span><img class="frame" src="assets/ui/card.webp" alt=""><span class="nm">SOON...</span></div>
           </div>
@@ -778,7 +963,7 @@ button { font: inherit; color: inherit; }
           </div>
         </div>
         <div class="cs-spot" id="csSpot" data-anchor="#csFig,#csRing,#csBurst" aria-label="Drag sideways to spin the character">
-          <span class="rib drag" style="--h:42px">DRAG TO SPIN</span>
+          <span class="rib drag" data-rib="pink" style="--h:40px">DRAG TO SPIN</span>
         </div>
         <div class="cs-right">
           <div class="win" id="csWin" data-rv style="--rr:2deg"><span class="wt" id="csWorld">PINK WORLD</span>
@@ -802,7 +987,7 @@ button { font: inherit; color: inherit; }
                 <span class="k" id="csKind">ALBUM</span>
                 <h4 id="csPlayTitle">I WISH YOU WELL</h4>
                 <ul id="csLines">
-                  <li><img src="assets/ui/s_star_y.webp" alt=""><span>3 songs playable now, 12 more on the album</span></li>
+                  <li><img src="assets/ui/s_star_y.webp" alt=""><span>5 songs playable now, 9 more on the album</span></li>
                   <li><img src="assets/ui/s_star_y.webp" alt=""><span>Classic mode: four keys plus SPACE, with FEVER TIME</span></li>
                   <li><img src="assets/ui/s_star_y.webp" alt=""><span>4 outfits to unlock as you level up</span></li>
                 </ul>
@@ -822,12 +1007,13 @@ button { font: inherit; color: inherit; }
     <div class="cam" aria-hidden="true">
       <div class="polka"></div>
       <div class="fit-stripes"></div>
+      <div class="bgp" data-scene="fits" style="--z:-500px;--s:1.4"></div>
       <div class="car" id="car">
         <div class="floor"></div>
-        <div class="it" data-k="0"><img src="assets/fit_bunny.webp" alt="" width="737" height="1060"></div>
-        <div class="it" data-k="1"><img src="assets/fit_y2k.webp" alt="" width="737" height="1060"></div>
-        <div class="it" data-k="2"><img src="assets/fit_angel.webp" alt="" width="737" height="1060"></div>
-        <div class="it" data-k="3"><img src="assets/fit_sunny.webp" alt="" width="722" height="1060"></div>
+        <div class="it" data-k="0"><img src="assets/fit_bunny.webp" alt="" width="438" height="1009"></div>
+        <div class="it" data-k="1"><img src="assets/fit_y2k.webp" alt="" width="446" height="1005"></div>
+        <div class="it" data-k="2"><img src="assets/fit_angel.webp" alt="" width="434" height="1001"></div>
+        <div class="it" data-k="3"><img src="assets/fit_sunny.webp" alt="" width="461" height="1016"></div>
       </div>
       <img class="fl" src="assets/ui/s_bow.webp" alt="" style="--x:8%;--y:14%;--z:-160px;--w:84px;--d:6s">
       <img class="fl" src="assets/ui/s_sparkle.webp" alt="" style="--x:48%;--y:10%;--z:-60px;--w:60px;--d:7s;--dl:-2s">
@@ -836,7 +1022,7 @@ button { font: inherit; color: inherit; }
     <div class="ui"><div class="wrap">
       <div class="fits-grid">
         <div class="fit-spot" id="fitSpot" data-anchor="#car" aria-label="Drag sideways to turn the outfits">
-          <span class="rib" id="fitRib">BUNNY FIT</span>
+          <span class="rib" id="fitRib" data-rib="pink">BUNNY FIT</span>
         </div>
         <div class="fits-copy">
           <h2 style="margin:0" data-rv><span class="ttlw" style="--img:url(assets/ui/t_dress.webp)"><img class="ttl" src="assets/ui/t_dress.webp" alt="Dress her up!" width="1500" height="513"></span></h2>
@@ -860,7 +1046,7 @@ button { font: inherit; color: inherit; }
   <!-- gameplay -->
   <section class="stage play" id="gameplay" data-sec="play" data-cam="22,12,5,8,8,160">
     <div class="cam" aria-hidden="true">
-      <div class="bgp" data-loop="play" style="background-image:url(assets/ui/bg_play.webp);--z:-900px;--s:1.95"></div>
+      <div class="bgp" data-scene="play" style="--z:-900px;--s:1.95"></div>
       <div class="tunnel" id="tunnel">
         <div class="screen3d a"><img src="assets/shot_play.webp" alt="" width="1600" height="900" loading="lazy"></div>
         <div class="screen3d b"><img src="assets/shot_play2.webp" alt="" width="1600" height="900" loading="lazy"></div>
@@ -912,9 +1098,51 @@ button { font: inherit; color: inherit; }
             <button class="song" type="button" data-src="assets/prev_t01.mp3" aria-pressed="false"><span class="pb"><svg class="pl"><use href="#i-play"/></svg><svg class="pz"><use href="#i-pause"/></svg></span><span class="t">BAKA!! 2.0</span><span class="bpm">154 BPM</span></button>
             <button class="song" type="button" data-src="assets/prev_t02.mp3" aria-pressed="false"><span class="pb"><svg class="pl"><use href="#i-play"/></svg><svg class="pz"><use href="#i-pause"/></svg></span><span class="t">HYPNOTIZED</span><span class="bpm">143 BPM</span></button>
             <button class="song" type="button" data-src="assets/prev_t03.mp3" aria-pressed="false"><span class="pb"><svg class="pl"><use href="#i-play"/></svg><svg class="pz"><use href="#i-pause"/></svg></span><span class="t">待ってください</span><span class="bpm">110 BPM</span></button>
-            <p class="more">Tap a song to hear its preview. 12 more songs on the album arrive in later builds.</p>
+            <button class="song" type="button" data-src="assets/prev_t04.mp3" aria-pressed="false"><span class="pb"><svg class="pl"><use href="#i-play"/></svg><svg class="pz"><use href="#i-pause"/></svg></span><span class="t">F*CK IT</span><span class="bpm">171 BPM</span></button>
+            <button class="song" type="button" data-src="assets/prev_t05.mp3" aria-pressed="false"><span class="pb"><svg class="pl"><use href="#i-play"/></svg><svg class="pz"><use href="#i-pause"/></svg></span><span class="t">ZOMBIES</span><span class="bpm">146 BPM</span></button>
+            <p class="more">Tap a song to hear its preview. 9 more songs on the album arrive in later builds.</p>
           </div>
         </div>
+      </div>
+    </div></div>
+  </section>
+
+  <div class="torn" aria-hidden="true" style="--r:-1.6deg"><div class="tp"></div><div class="tt"><div class="tk" data-words="MUSIC VIDEOS|BAKA!! 2.0|HYPNOTIZED|待ってください|ZOMBIES"></div></div></div>
+
+  <!-- music videos -->
+  <section class="stage mvs" id="videos" data-sec="mv" data-cam="18,10,3,6,5,120">
+    <div class="cam" aria-hidden="true">
+      <div class="bgp" data-scene="burst" style="--z:-760px;--s:1.9"></div>
+      <img class="fl" src="assets/ui/s_note.webp" alt="" style="--x:5%;--y:10%;--z:-160px;--w:70px;--d:6s">
+      <img class="fl" src="assets/ui/s_pxheart2.webp" alt="" style="--x:92%;--y:16%;--z:-60px;--w:64px;--d:7s;--dl:-2s">
+      <img class="fl" src="assets/ui/s_star_y.webp" alt="" style="--x:88%;--y:82%;--z:80px;--w:56px;--d:5s;--dl:-1s">
+    </div>
+    <div class="ui"><div class="wrap">
+      <div class="mv-head" data-rv>
+        <h2 class="stk ttl-txt">MUSIC VIDEOS</h2>
+        <p class="lead">Every one of Syaski's songs plays out as its own music video behind the notes. Five of them are in the game now.</p>
+      </div>
+      <div class="mv-grid">
+        <figure class="win mvw" data-rv style="--rr:-1.5deg"><span class="wt">BAKA!! 2.0 · 154 BPM</span>
+          <div class="scr"><img src="assets/mv_baka.webp" alt="Syaski dancing in BAKA!! 2.0 with the lyrics on screen" width="1280" height="720" loading="lazy"></div>
+          <figcaption>The camera cuts like an AMV, and the words fly at you on the beat.</figcaption>
+        </figure>
+        <figure class="win mvw" data-rv style="--rr:1.2deg"><span class="wt">HYPNOTIZED · 143 BPM</span>
+          <div class="scr"><img src="assets/mv_hyp.webp" alt="HYPNOTIZED, with pop-up windows stacking over a pink spiral" width="1280" height="720" loading="lazy"></div>
+          <figcaption>Her desktop: pop-up windows pile up over a hypnotic spiral.</figcaption>
+        </figure>
+        <figure class="win mvw" data-rv style="--rr:-1deg"><span class="wt">待ってください · 110 BPM</span>
+          <div class="scr"><img src="assets/mv_wait.webp" alt="待ってください, two sticker cut-ins of Syaski over a bunny pattern" width="1280" height="720" loading="lazy"></div>
+          <figcaption>A sunny meadow, with sticker cut-ins of her landing on the beat.</figcaption>
+        </figure>
+        <figure class="win mvw" data-rv style="--rr:1.5deg"><span class="wt">F*CK IT · 171 BPM</span>
+          <div class="scr"><img src="assets/mv_fckit.webp" alt="Syaski's pink car on the motorway in F*CK IT" width="1280" height="720" loading="lazy"></div>
+          <figcaption>Her morning, her own car, then the motorway at full speed.</figcaption>
+        </figure>
+        <figure class="win mvw" data-rv style="--rr:-1.2deg"><span class="wt">ZOMBIES · 146 BPM</span>
+          <div class="scr"><img src="assets/mv_zombies.webp" alt="ZOMBIES, the street full of zombies in slow motion" width="1280" height="720" loading="lazy"></div>
+          <figcaption>The outbreak, a swarm in the street, slow motion, then a breakdance battle.</figcaption>
+        </figure>
       </div>
     </div></div>
   </section>
@@ -924,7 +1152,7 @@ button { font: inherit; color: inherit; }
   <!-- Alki's highway -->
   <section class="stage hw" id="highway" data-sec="hw" data-cam="18,10,4,6,6,140">
     <div class="cam" aria-hidden="true">
-      <div class="bgp" data-loop="alki" style="background-image:url(assets/ui/bg_alki.webp);--z:-900px;--s:1.95"></div>
+      <div class="bgp" data-scene="hw" style="--z:-900px;--s:1.95"></div>
       <div class="road">
         <i class="gem" style="left:29.5%;--gd:-.2s"></i><i class="gem" style="left:50%;--gd:-.9s;--gc:#ffffff"></i><i class="gem" style="left:70.5%;--gd:-1.5s"></i>
         <i class="gem" style="left:9.5%;--gd:-2.1s"></i><i class="gem" style="left:90.5%;--gd:-.6s"></i><i class="gem" style="left:50%;--gd:-1.8s"></i>
@@ -984,17 +1212,13 @@ button { font: inherit; color: inherit; }
   <!-- WORLD -->
   <section class="stage world" id="world" data-sec="world" data-cam="18,10,3,6,5,120">
     <div class="cam" aria-hidden="true">
-      <div class="bgp" data-loop="world" style="background-image:url(assets/ui/bg_world.webp);--z:-760px;--s:1.75"></div>
-      <img class="cloud3d" src="assets/ui/s_cloud.webp" alt="" style="--w:200px;--x:6%;--y:10%;--z:-420px;--d:44s">
-      <img class="cloud3d" src="assets/ui/s_cloud.webp" alt="" style="--w:150px;--x:70%;--y:6%;--z:-260px;--d:36s">
-      <img class="cloud3d" src="assets/ui/s_cloud.webp" alt="" style="--w:120px;--x:46%;--y:40%;--z:-120px;--d:30s">
-      <img class="cloud3d" src="assets/ui/s_cloud.webp" alt="" style="--w:170px;--x:86%;--y:60%;--z:60px;--d:40s">
+      <div class="bgp" data-scene="world" style="--z:-760px;--s:1.75"></div>
       <img class="fl" src="assets/ui/s_sparkle2.webp" alt="" style="--x:30%;--y:80%;--z:100px;--w:50px;--d:6s">
     </div>
     <div class="ui"><div class="wrap">
       <div data-rv>
         <h2 style="margin:0"><span class="ttlw" style="--img:url(assets/ui/t_world.webp)"><img class="ttl" src="assets/ui/t_world.webp" alt="Hang out in WORLD" width="1500" height="812"></span></h2>
-        <p class="lead">Between songs, walk around a 3D world with your friends. Host your own or join theirs, chat, dance together and build.</p>
+        <p class="lead">Between songs, walk around a 3D town with your friends. Host your own world or join theirs, talk, dance together, play mini games for coins, and drive.</p>
       </div>
       <div class="world-top">
         <div class="win wshot tilt" data-rv style="--rr:-1.5deg"><span class="wt">MAYLEEVERSE'S WORLD</span>
@@ -1006,9 +1230,11 @@ button { font: inherit; color: inherit; }
         </div>
         <div class="feats">
           <div class="feat" data-rv><span class="ic"><img src="assets/ui/s_play.webp" alt=""></span><div><h3>HOST OR JOIN</h3><p>Open your own world, or pick a friend's from the JOIN list.</p></div></div>
-          <div class="feat" data-rv><span class="ic"><img src="assets/ui/s_note.webp" alt=""></span><div><h3>CHAT</h3><p>Type to everyone in the world, and see who joins.</p></div></div>
+          <div class="feat" data-rv><span class="ic"><img src="assets/ui/s_note.webp" alt=""></span><div><h3>CHAT</h3><p>Type to everyone in the world, and see who joins. Press M for the map.</p></div></div>
           <div class="feat" data-rv><span class="ic"><img src="assets/ui/s_pxheart.webp" alt=""></span><div><h3>9 EMOTES</h3><p>Wave, dance, blow a kiss. Keys 1 to 9 in the game, and on this page too.</p></div></div>
           <div class="feat" data-rv><span class="ic"><img src="assets/ui/s_bow.webp" alt=""></span><div><h3>BUILD MODE</h3><p>The host can build. Start from Blank Canvas and make the whole map your own.</p></div></div>
+          <div class="feat" data-rv><span class="ic"><img src="assets/ui/s_headphones.webp" alt=""></span><div><h3>VOICE CHAT</h3><p>Turn your mic on with V and talk. Everyone's character moves their mouth when they speak.</p></div></div>
+          <div class="feat" data-rv><span class="ic"><img src="assets/ui/s_star_y.webp" alt=""></span><div><h3>COINS + MINI GAMES</h3><p>Sweet Catch, Cake Stack, Star Dash, the claw machine, fishing, potion brewing and more, all paying coins.</p></div></div>
         </div>
       </div>
       <div class="maps" id="maps"></div>
@@ -1029,12 +1255,49 @@ button { font: inherit; color: inherit; }
     </div></div>
   </section>
 
+  <div class="torn" aria-hidden="true" style="--r:-1.8deg;filter:hue-rotate(160deg) saturate(1.2)"><div class="tp"></div><div class="tt"><div class="tk" data-words="YOUR CAR|PAINT IT|NEW RIMS|TUNE IT|HIT THE MOTORWAY"></div></div></div>
+
+  <!-- cars and the garage -->
+  <section class="stage cars" id="cars" data-sec="cars" data-cam="18,10,3,6,5,120">
+    <div class="cam" aria-hidden="true">
+      <div class="bgp" data-scene="world" style="--z:-760px;--s:1.75"></div>
+      <img class="fl" src="assets/ui/s_sparkle.webp" alt="" style="--x:8%;--y:12%;--z:-120px;--w:64px;--d:6s">
+      <img class="fl" src="assets/ui/s_bolt.webp" alt="" style="--x:90%;--y:76%;--z:60px;--w:60px;--d:7s;--dl:-2s">
+    </div>
+    <div class="ui"><div class="wrap">
+      <div class="mv-head" data-rv>
+        <h2 class="stk ttl-txt" style="--sc:#2f9fe0">YOUR CAR</h2>
+        <p class="lead">Syaski's Lovebite and Alki's Nocturne are parked in WORLD. Get in, drive the roads and the motorway, and buy more cars at the dealership with the coins you earn.</p>
+      </div>
+      <div class="cars-grid">
+        <div class="win garage-win tilt" data-rv style="--rr:-1.2deg"><span class="wt">GARAGE</span>
+          <div class="gshots">
+            <div class="scr"><img src="assets/shot_garage.webp" alt="The garage paint tab, the Lovebite sprayed ocean blue" width="1280" height="720" loading="lazy"></div>
+            <div class="scr"><img src="assets/shot_garage2.webp" alt="The garage wheels tab, new rims on the pink Lovebite" width="1280" height="720" loading="lazy"></div>
+          </div>
+          <div class="chips"><span class="chip">BODY KITS</span><span class="chip">PAINT + FINISH</span><span class="chip">WHEELS</span><span class="chip">VINYLS</span><span class="chip">LIGHTS + TINT</span><span class="chip">TUNING</span></div>
+          <p>Press F by your car to open the garage. Bumpers, hoods, wings and widebody arches, paint in gloss, matte, pearl or chrome, rims and callipers, stickers anywhere on the body, underglow, and engine, gearbox, tyres and nitrous upgrades.</p>
+        </div>
+        <div class="win carlist" data-rv style="--rr:1deg"><span class="wt">CARS</span>
+          <ul>
+            <li class="carrow" style="--cc:#ff4fa0"><b>Lovebite</b><span class="own">Syaski's</span><span class="cd">A light widebody coupe with a rotary engine that loves to slide. Cat-eye lights, heart tail lights.</span></li>
+            <li class="carrow" style="--cc:#e3173b"><b>Nocturne</b><span class="own">Alki's</span><span class="cd">A black V8 muscle car with fang lights and a full-width red tail bar.</span></li>
+            <li class="carrow" style="--cc:#7cc9f5"><b>Pip</b><span class="own">1,500 coins</span><span class="cd">A small, happy city car to start with.</span></li>
+            <li class="carrow" style="--cc:#a98bf0"><b>Towne</b><span class="own">4,000 coins</span><span class="cd">A comfy saloon for cruising round town.</span></li>
+            <li class="carrow" style="--cc:#ffb000"><b>Pip R</b><span class="own">9,000 coins</span><span class="cd">The Pip with a race kit and a lot more power.</span></li>
+            <li class="carrow" style="--cc:#3a2a7a"><b>Halo</b><span class="own">60,000 coins</span><span class="cd">The fastest car at the dealership.</span></li>
+          </ul>
+        </div>
+      </div>
+    </div></div>
+  </section>
+
   <div class="torn" aria-hidden="true" style="--r:-1.6deg;filter:hue-rotate(40deg) saturate(1.2)"><div class="tp"></div><div class="tt"><div class="tk" data-words="LEVEL UP|NEW OUTFIT|NOTE SKINS|DAILY CHALLENGES"></div></div></div>
 
   <!-- level up -->
   <section class="stage lvl" id="levels" data-sec="lvl" data-cam="14,8,3,5,4,100">
     <div class="cam" aria-hidden="true">
-      <div class="bgp" style="background-image:url(assets/ui/bg_burst.webp);--z:-760px;--s:1.9"></div>
+      <div class="bgp" data-scene="burst" style="--z:-760px;--s:1.9"></div>
       <img class="fl" src="assets/ui/s_star_y.webp" alt="" style="--x:8%;--y:12%;--z:-120px;--w:80px;--d:6s">
       <img class="fl" src="assets/ui/s_star_y.webp" alt="" style="--x:88%;--y:70%;--z:60px;--w:64px;--d:7s;--dl:-3s">
     </div>
@@ -1067,10 +1330,10 @@ button { font: inherit; color: inherit; }
   <!-- download -->
   <section class="stage dl" id="download" data-sec="dl" data-cam="20,10,3,6,5,120">
     <div class="cam" aria-hidden="true">
-      <div class="bgp" style="background-image:url(assets/ui/bg_burst.webp);--z:-800px;--s:2"></div>
+      <div class="bgp" data-scene="burst" style="--z:-800px;--s:2"></div>
       <div class="crew" id="crew">
         <img src="assets/line_r1nner.webp" alt="" style="left:2%;transform:translateZ(-140px)">
-        <img src="assets/line_kalijero.webp" alt="" style="right:2%;transform:translateZ(-160px)">
+        <img src="assets/line_carl.webp" alt="" style="right:4%;transform:translateZ(-160px)">
         <img src="assets/line_alki.webp" alt="" style="left:50%;margin-left:-2%;transform:translateZ(-60px)">
         <img src="assets/line_syaski.webp" alt="" style="left:22%;transform:translateZ(40px)">
       </div>
@@ -1088,7 +1351,7 @@ button { font: inherit; color: inherit; }
         <div class="dl-in">
           <div class="dl-main">
             <h3 class="dl-title"><span class="ttlw" style="--img:url(assets/ui/t_download.webp)"><img class="ttl" src="assets/ui/t_download.webp" alt="Download for PC" width="1500" height="722" loading="lazy"></span></h3>
-            <div class="dl-tags"><span class="chip">PRE-ALPHA</span><span class="chip b">WINDOWS 10 &amp; 11</span><span class="chip y">.ZIP · ABOUT 150 MB</span></div>
+            <div class="dl-tags"><span class="chip">PRE-ALPHA</span><span class="chip b">WINDOWS 10 &amp; 11</span><span class="chip y">.ZIP · ABOUT 400 MB</span></div>
             <p class="dl-say">This is an early build. Songs, characters and screens will keep changing, and some things will break. Each update lists what's new in UPDATE NOTES.txt, right next to the game.</p>
             <!-- DOWNLOAD LINK: paste it into DOWNLOAD_URL at the top of the script at the bottom of this file -->
             <a class="btn big" id="dlBtn" href="#download" data-download><svg aria-hidden="true"><use href="#i-down"/></svg>DOWNLOAD<span class="xl">&nbsp;FOR WINDOWS</span></a>
@@ -1128,7 +1391,7 @@ button { font: inherit; color: inherit; }
       <p>MiXVERSE is made by mayleeverse.</p>
       <small>mixverserhythm.com · © 2026 mayleeverse. Pre-alpha: everything on this page is from the game as it is today.</small>
     </div>
-    <nav aria-label="Footer"><a href="#top">TOP</a><a href="#characters">CHARACTERS</a><a href="#gameplay">GAMEPLAY</a><a href="#world">WORLD</a><a href="#download">DOWNLOAD</a></nav>
+    <nav aria-label="Footer"><a href="#top">TOP</a><a href="#characters">CHARACTERS</a><a href="#gameplay">GAMEPLAY</a><a href="#videos">VIDEOS</a><a href="#world">WORLD</a><a href="#cars">CARS</a><a href="#download">DOWNLOAD</a></nav>
   </div>
 </footer>
 
@@ -1147,6 +1410,502 @@ const fine = matchMedia('(pointer: fine)').matches;
 const clamp = (v, a, b) => Math.max(a, Math.min(b, v));
 const UI = 'assets/ui/';
 
+/* ---------- vector sets: every background is built from shapes, and every shape is keyed by hand ---------- */
+// The pieces are small vector stickers (the game's bunnies, pixel hearts, sparkles, dot grids, notes, clouds, drips,
+// bats...) each with its own tween on the beat; the big flat shapes behind them stay put. Nothing here is generated
+// frame by frame by a model: it is shapes and keyframes, like the game's own title screen.
+const SV = (() => {
+  const PXH = ['.oo.oo.', 'oppoppo', 'opwpppo', 'oppppro', '.opppo.', '..opo..', '...o...'];
+  const pxHeart = () => { let r = ''; PXH.forEach((row, j) => [...row].forEach((ch, i) => { if (ch === '.') return; const f = ch === 'o' ? '#fff' : ch === 'w' ? '#fff' : ch === 'r' ? '#d92a7c' : 'currentColor'; r += `<rect x="${i * 10}" y="${j * 10}" width="10.6" height="10.6" fill="${f}"/>`; })); return r; };
+  // a pixel star outline: the cells on the edge of a five-point star
+  const pxStar = () => {
+    const N = 15, pts = []; for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + i * Math.PI / 5, r = i % 2 ? 3.1 : 7.2; pts.push([7.5 + Math.cos(a) * r, 7.8 + Math.sin(a) * r]); }
+    const inside = (x, y) => { let c = false; for (let i = 0, j = 9; i < 10; j = i++) { const [xi, yi] = pts[i], [xj, yj] = pts[j]; if ((yi > y) !== (yj > y) && x < (xj - xi) * (y - yi) / (yj - yi) + xi) c = !c; } return c; };
+    let r = ''; for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) { const c = inside(x + .5, y + .5); if (!c) continue; const edge = !inside(x - .5, y + .5) || !inside(x + 1.5, y + .5) || !inside(x + .5, y - .5) || !inside(x + .5, y + 1.5); if (edge) r += `<rect x="${x * 10}" y="${y * 10}" width="10.6" height="10.6"/>`; }
+    return r;
+  };
+  const dots = (n, s, r) => { let o = ''; for (let j = 0; j < n; j++) for (let i = 0; i < n; i++) o += `<circle cx="${i * s + s / 2}" cy="${j * s + s / 2}" r="${r}"/>`; return o; };
+  const SYM = {
+    bunny: ['0 0 100 100', '<g fill="#fff"><rect x="23" y="2" width="17" height="46" rx="8.5" transform="rotate(-9 31 44)"/><rect x="60" y="2" width="17" height="46" rx="8.5" transform="rotate(9 69 44)"/><ellipse cx="50" cy="66" rx="39" ry="31"/></g><circle cx="37" cy="66" r="5.2" fill="currentColor"/><circle cx="63" cy="66" r="5.2" fill="currentColor"/><ellipse cx="50" cy="76" rx="4.5" ry="2.6" fill="currentColor" opacity=".55"/>'],
+    pxheart: ['0 0 70 70', pxHeart()],
+    pxstar: ['0 0 150 150', `<g fill="currentColor">${pxStar()}</g>`],
+    sparkle: ['0 0 100 100', '<path d="M50 0 Q55 45 100 50 Q55 55 50 100 Q45 55 0 50 Q45 45 50 0Z" fill="currentColor" stroke="#fff" stroke-width="5" paint-order="stroke"/>'],
+    heart: ['0 0 100 92', '<path d="M50 88 C18 66 4 46 4 30 C4 14 16 4 30 4 C40 4 47 10 50 18 C53 10 60 4 70 4 C84 4 96 14 96 30 C96 46 82 66 50 88Z" fill="currentColor" stroke="#fff" stroke-width="7" paint-order="stroke"/>'],
+    oheart: ['0 0 100 92', '<path d="M50 84 C20 64 8 46 8 31 C8 17 18 8 31 8 C40 8 47 13 50 21 C53 13 60 8 69 8 C82 8 92 17 92 31 C92 46 80 64 50 84Z" fill="none" stroke="currentColor" stroke-width="9" stroke-linejoin="round"/>'],
+    dots: ['0 0 84 84', `<g fill="currentColor">${dots(6, 14, 3.4)}</g>`],
+    pill: ['0 0 200 40', '<rect x="2" y="2" width="196" height="36" rx="18" fill="currentColor"/>'],
+    tri: ['0 0 100 100', '<path d="M18 8 L92 50 L18 92Z" fill="currentColor" stroke="#fff" stroke-width="6" stroke-linejoin="round" paint-order="stroke"/>'],
+    note: ['0 0 100 100', '<path d="M38 12 L86 4 L86 66 A14 12 0 1 1 74 54 L74 24 L50 28 L50 76 A14 12 0 1 1 38 64Z" fill="currentColor" stroke="#fff" stroke-width="6" stroke-linejoin="round" paint-order="stroke"/>'],
+    xmark: ['0 0 100 100', '<g fill="currentColor" stroke="#000" stroke-width="5" paint-order="stroke"><rect x="40" y="2" width="20" height="96" rx="6" transform="rotate(45 50 50)"/><rect x="40" y="2" width="20" height="96" rx="6" transform="rotate(-45 50 50)"/></g>'],
+    bolt: ['0 0 100 100', '<path d="M60 2 L14 56 L44 56 L34 98 L86 38 L56 38Z" fill="currentColor" stroke="#000" stroke-width="5" stroke-linejoin="round" paint-order="stroke"/>'],
+    diamond: ['0 0 100 100', '<path d="M50 2 L86 50 L50 98 L14 50Z" fill="currentColor" stroke="#000" stroke-width="5" stroke-linejoin="round" paint-order="stroke"/><path d="M50 18 L72 50 L50 82 L28 50Z" fill="#000" opacity=".25"/>'],
+    star: ['0 0 100 100', '<path d="M50 4 L62 36 L96 38 L69 59 L79 93 L50 73 L21 93 L31 59 L4 38 L38 36Z" fill="currentColor" stroke="#fff" stroke-width="6" stroke-linejoin="round" paint-order="stroke"/>'],
+    rect: ['0 0 20 12', '<rect width="20" height="12" rx="2" fill="currentColor"/>'],
+    cloud: ['0 0 200 110', '<g fill="#d7eefc"><circle cx="52" cy="70" r="36"/><circle cx="100" cy="52" r="46"/><circle cx="150" cy="70" r="36"/><rect x="40" y="70" width="120" height="36" rx="18"/></g><g fill="#fff"><circle cx="52" cy="62" r="34"/><circle cx="100" cy="44" r="44"/><circle cx="150" cy="62" r="34"/><rect x="40" y="60" width="120" height="36" rx="18"/></g>'],
+    flower: ['0 0 100 120', '<rect x="47" y="56" width="6" height="64" rx="3" fill="#5fc58a"/><g fill="currentColor" stroke="#fff" stroke-width="4">' + [0, 72, 144, 216, 288].map(a => `<ellipse cx="50" cy="26" rx="15" ry="21" transform="rotate(${a} 50 48)"/>`).join('') + '</g><circle cx="50" cy="48" r="11" fill="#ffe46b" stroke="#fff" stroke-width="4"/>'],
+    moon: ['0 0 100 100', '<circle cx="50" cy="50" r="48" fill="#f3d9d9"/><g fill="#d9a9ad"><circle cx="34" cy="38" r="10"/><circle cx="62" cy="62" r="13"/><circle cx="66" cy="30" r="6"/><circle cx="36" cy="70" r="5"/></g><circle cx="50" cy="50" r="48" fill="none" stroke="#ff4d6a" stroke-width="3" opacity=".6"/>'],
+    drip: ['0 0 30 100', '<path d="M0 0 H30 V70 Q30 96 15 96 Q0 96 0 70Z" fill="currentColor"/>'],
+    bat: ['0 0 120 60', '<g class="flap" style="transform-origin:60px 30px"><path d="M60 30 C44 6 20 4 2 14 C14 18 18 26 16 34 C26 28 36 30 42 38 C46 32 54 30 60 30Z M60 30 C76 6 100 4 118 14 C106 18 102 26 104 34 C94 28 84 30 78 38 C74 32 66 30 60 30Z" fill="currentColor"/></g><ellipse cx="60" cy="32" rx="8" ry="10" fill="currentColor"/>'],
+    fog: ['0 0 300 80', '<ellipse cx="150" cy="40" rx="148" ry="38" fill="currentColor"/>'],
+    sun: ['0 0 100 100', '<g class="spin2" style="transform-origin:50px 50px">' + Array.from({ length: 12 }, (_, i) => `<rect x="47" y="0" width="6" height="18" rx="3" fill="#ffd25c" transform="rotate(${i * 30} 50 50)"/>`).join('') + '</g><circle cx="50" cy="50" r="28" fill="#ffe46b" stroke="#fff" stroke-width="5"/>'],
+  };
+  const sprite = Object.entries(SYM).map(([k, [vb, body]]) => `<symbol id="v-${k}" viewBox="${vb}">${body}</symbol>`).join('');
+  const EASE = { 't-hop': 'ease-in-out', 't-pulse': 'cubic-bezier(.2,.7,.3,1)', 't-step': 'ease-in-out', 't-slide': 'cubic-bezier(.65,0,.3,1)', 't-twinkle': 'ease-in-out', 't-sway': 'ease-in-out', 't-bob': 'ease-in-out',
+    't-blink': 'steps(1,end)', 't-cross': 'linear', 't-drip': 'cubic-bezier(.5,0,.8,.4)', 't-fall': 'linear', 't-glow': 'ease-in-out', 't-nod': 'cubic-bezier(.2,.8,.3,1)', 't-spin': 'linear' };
+  // a piece: [symbol, x%, y%, width, tween, beats, delay beats, extra css vars]
+  const pc = (s, x, y, w, an, n = 2, dl = 0, ex = {}) => {
+    const ar = ex.ar || (SYM[s] ? (() => { const v = SYM[s][0].split(' ').map(Number); return v[2] / v[3]; })() : 1);
+    const st = { '--x': x + '%', '--y': y + '%', '--w': w, '--an': an, '--n': n, '--dl': dl, '--ar': ar, '--ez': ex.ez || EASE[an] || 'ease-in-out' };
+    for (const k in ex) if (k !== 'ar' && k !== 'ez' && k !== 'inline') st['--' + k] = ex[k];
+    const css = Object.entries(st).map(([k, v]) => `${k}:${v}`).join(';');
+    const body = ex.inline ? SYM[s][1] : `<use href="#v-${s}"/>`;
+    return `<div class="pc" style="${css}"><svg viewBox="${SYM[s][0]}">${body}</svg></div>`;
+  };
+  const txt = (x, y, lines, c, align = 'left') => `<div class="pc txt" style="--x:${x}%;--y:${y}%;--c:${c};--an:none;text-align:${align};color:${c}">${lines.join('<br>')}<i style="${align === 'right' ? 'margin-left:auto' : ''}"></i></div>`;
+  const rnd = (s => () => (s = (s * 16807) % 2147483647) / 2147483647)(7);
+  const svg = (body, defs = '') => `<svg class="sc" viewBox="0 0 1600 1000" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs>${defs}</defs>${body}</svg>`;
+
+  const S = {};
+  S.hero = id => ({
+    st: svg(`<rect width="1600" height="1000" fill="url(#${id}g)"/>
+      <polygon points="0,0 700,0 330,1000 0,1000" fill="#ffe0ef"/><polygon points="0,0 470,0 190,640 0,640" fill="#ff9fcd"/><polygon points="0,640 190,640 60,1000 0,1000" fill="#ffc6e1"/>
+      <polygon points="1010,0 1600,0 1600,700" fill="#c4e7fc"/><polygon points="1230,0 1600,0 1600,330" fill="#9fd8fa"/><polygon points="560,1000 960,0 1090,0 690,1000" fill="#eef8ff"/>
+      <polygon points="1120,1000 1600,430 1600,1000" fill="#dff2fe"/><polygon points="1380,1000 1600,760 1600,1000" fill="#ffc6e1"/>
+      <g stroke="#fff" stroke-width="7" stroke-linecap="round"><line x1="430" y1="130" x2="610" y2="50"/><line x1="470" y1="170" x2="560" y2="130"/><line x1="1150" y1="900" x2="1390" y2="790"/><line x1="1190" y1="955" x2="1330" y2="890"/></g>`,
+      `<linearGradient id="${id}g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff"/><stop offset="1" stop-color="#fff2f9"/></linearGradient>`),
+    pcs: [txt(12, 11, ['MUSIC', 'CONNECT', 'MiX×VERSE'], '#fff'), txt(80, 10, ['PLAY', 'MUSIC', 'BE YOURSELF'], '#ff5fa2', 'right'), txt(82, 72, ['A', 'BRIGHTER', 'BEAT', 'TOGETHER'], '#2f9fe0', 'right'),
+      pc('bunny', 30, 13, '6.5%', 't-hop', 2, 0, { c: '#7cc9f5', to: '50% 100%' }), pc('bunny', 13, 60, '5.5%', 't-hop', 2, 1, { c: '#ff5fa2', to: '50% 100%' }), pc('bunny', 88, 38, '4.6%', 't-hop', 2, .5, { c: '#ff5fa2', to: '50% 100%' }),
+      pc('pxheart', 73, 15, '6%', 't-pulse', 1, 0, { c: '#ff8cc6' }), pc('pxstar', 61, 8, '5.4%', 't-step', 16, 0, { c: '#ff5fa2' }),
+      pc('dots', 18, 34, '7%', 't-bob', 4, 0, { c: '#fff', dy: '-12px' }), pc('dots', 77, 57, '8%', 't-bob', 4, 2, { c: '#ffb3d6', dy: '10px' }), pc('dots', 54, 80, '6%', 't-bob', 4, 1, { c: '#bfe5fb' }),
+      pc('sparkle', 44, 18, '3.2%', 't-twinkle', 4, 0, { c: '#7cc9f5' }), pc('sparkle', 90, 24, '2.6%', 't-twinkle', 4, 1, { c: '#ff5fa2' }), pc('sparkle', 24, 78, '3%', 't-twinkle', 4, 2, { c: '#ffe46b' }),
+      pc('sparkle', 66, 70, '2.4%', 't-twinkle', 4, 3, { c: '#ff8cc6' }), pc('sparkle', 8, 24, '2.2%', 't-twinkle', 4, 1.5, { c: '#fff' }),
+      pc('pill', 74, 84, '9%', 't-slide', 8, 0, { c: '#ff8cc6', dx: '26px', dy: '-15px', to: '0 0' }), pc('pill', 78, 89, '7%', 't-slide', 8, .5, { c: '#ff5fa2', dx: '-20px', dy: '12px' }), pc('pill', 70, 92, '5%', 't-slide', 8, 1, { c: '#7cc9f5', dx: '18px', dy: '-10px' }),
+      pc('tri', 90, 84, '3%', 't-sway', 4, 0, { c: '#ff8cc6', a: '14deg' }), pc('tri', 40, 90, '2.4%', 't-sway', 4, 2, { c: '#7cc9f5', a: '-12deg' }),
+      pc('heart', 10, 88, '1.9%', 't-blink', 4, 0, { c: '#ff5fa2' }), pc('heart', 12.6, 88, '1.9%', 't-blink', 4, 1, { c: '#ff5fa2' }), pc('heart', 15.2, 88, '1.9%', 't-blink', 4, 2, { c: '#ff5fa2' })].join(''),
+  });
+  // a burst behind a screen: rays turning, things popping in around it, confetti coming down
+  S.burst = id => {
+    const rays = Array.from({ length: 22 }, (_, i) => { const a0 = i * Math.PI * 2 / 22, a1 = a0 + Math.PI / 22; return `<polygon points="500,500 ${500 + Math.cos(a0) * 760},${500 + Math.sin(a0) * 760} ${500 + Math.cos(a1) * 760},${500 + Math.sin(a1) * 760}" style="fill:var(--r2,#ffb3d6)"/>`; }).join('');
+    const conf = Array.from({ length: 12 }, (_, i) => pc(i % 3 ? 'rect' : 'heart', 6 + rnd() * 88, -6, (0.9 + rnd() * .8).toFixed(2) + '%', 't-fall', 10 + Math.round(rnd() * 8), -rnd() * 16, { c: ['#ff5fa2', '#7cc9f5', '#ffe46b', '#a98bf0', '#fff'][i % 5], a: (360 + rnd() * 540).toFixed(0) + 'deg', dy: '130vh' })).join('');
+    return {
+      st: svg(`<rect width="1600" height="1000" fill="url(#${id}g)"/>`, `<radialGradient id="${id}g" cx=".5" cy=".5" r=".7"><stop offset="0" style="stop-color:var(--r0,#fff)"/><stop offset=".55" style="stop-color:var(--r1,#ffd3e8)"/><stop offset="1" style="stop-color:var(--r3,#ff9fcd)"/></radialGradient>`),
+      extra: `<div class="spin"><svg viewBox="0 0 1000 1000" style="opacity:.55">${rays}</svg></div>`,
+      pcs: [pc('bunny', 12, 16, '5.5%', 't-hop', 2, 0, { c: '#ff5fa2', to: '50% 100%' }), pc('bunny', 86, 70, '5%', 't-hop', 2, 1, { c: '#7cc9f5', to: '50% 100%' }),
+        pc('pxheart', 84, 16, '5.5%', 't-pulse', 1, 0, { c: '#ff5fa2' }), pc('pxheart', 14, 74, '4.5%', 't-pulse', 1, .5, { c: '#ff8cc6' }),
+        pc('star', 30, 86, '3.6%', 't-step', 16, 0, { c: '#ffe46b' }), pc('star', 70, 10, '3%', 't-step', 16, 4, { c: '#ffe46b' }),
+        pc('sparkle', 22, 40, '3%', 't-twinkle', 4, 0, { c: '#fff' }), pc('sparkle', 78, 42, '2.6%', 't-twinkle', 4, 2, { c: '#fff' }), pc('sparkle', 56, 88, '2.4%', 't-twinkle', 4, 1, { c: '#7cc9f5' }),
+        pc('dots', 6, 44, '6%', 't-bob', 4, 0, { c: '#fff' }), pc('dots', 90, 40, '6%', 't-bob', 4, 2, { c: '#fff' }), conf].join(''),
+    };
+  };
+  S.play = id => {
+    let stars = ''; for (let i = 0; i < 70; i++) stars += `<circle cx="${(rnd() * 1600).toFixed(0)}" cy="${(rnd() * 560).toFixed(0)}" r="${(1 + rnd() * 2.2).toFixed(1)}" fill="#fff" opacity="${(.3 + rnd() * .6).toFixed(2)}"/>`;
+    return {
+      st: svg(`<rect width="1600" height="1000" fill="url(#${id}g)"/><ellipse cx="800" cy="610" rx="900" ry="120" fill="url(#${id}h)"/>${stars}
+`,
+        `<linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#14093a"/><stop offset=".62" stop-color="#2c0e66"/><stop offset="1" stop-color="#4a0f7a"/></linearGradient>
+         <radialGradient id="${id}h" cx=".5" cy=".5" r=".5"><stop offset="0" stop-color="#ff5fd2" stop-opacity=".75"/><stop offset="1" stop-color="#ff5fd2" stop-opacity="0"/></radialGradient>`),
+      extra: '<div class="gfloor"></div>',
+      pcs: [pc('sparkle', 12, 14, '3.4%', 't-twinkle', 4, 0, { c: '#ff8cc6' }), pc('sparkle', 86, 18, '3%', 't-twinkle', 4, 1, { c: '#7cc9f5' }), pc('sparkle', 66, 8, '2.2%', 't-twinkle', 4, 2, { c: '#fff' }),
+        pc('sparkle', 30, 26, '2.4%', 't-twinkle', 4, 3, { c: '#7cc9f5' }), pc('sparkle', 92, 46, '2.6%', 't-twinkle', 4, .5, { c: '#ff8cc6' }), pc('sparkle', 6, 50, '2.2%', 't-twinkle', 4, 2.5, { c: '#fff' }),
+        pc('dots', 4, 8, '9%', 't-bob', 4, 0, { c: '#ff5fd2' }), pc('dots', 86, 4, '9%', 't-bob', 4, 2, { c: '#5fb8ff' }), pc('dots', 2, 66, '7%', 't-bob', 4, 1, { c: '#5fb8ff' }), pc('dots', 90, 62, '7%', 't-bob', 4, 3, { c: '#ff5fd2' }),
+        pc('pill', 8, 30, '11%', 't-slide', 8, 0, { c: '#ff5fa2', dx: '30px', dy: '-12px' }), pc('pill', 84, 30, '10%', 't-slide', 8, 2, { c: '#2f9fe0', dx: '-28px', dy: '10px' }),
+        pc('note', 20, 54, '3.2%', 't-sway', 2, 0, { c: '#ff5fa2', a: '10deg' }), pc('note', 78, 54, '2.8%', 't-sway', 2, 1, { c: '#7cc9f5', a: '-10deg' }),
+        pc('pxheart', 48, 6, '3.4%', 't-pulse', 1, 0, { c: '#ff5fa2' })].join(''),
+    };
+  };
+  S.hw = id => {
+    const g = `<path d="M0 860 Q200 820 420 850 T820 840 T1240 850 T1600 830 V1000 H0Z" fill="#050203"/>
+      ${[[120, 820, 1], [300, 836, .8], [520, 830, 1.1], [760, 822, .9], [1010, 832, 1], [1240, 826, 1.2], [1460, 820, .9]].map(([x, y, s], i) => i % 2
+        ? `<g transform="translate(${x} ${y}) scale(${s})" fill="#050203"><rect x="-8" y="-70" width="16" height="80"/><rect x="-30" y="-52" width="60" height="14"/></g>`
+        : `<g transform="translate(${x} ${y}) scale(${s})" fill="#050203"><path d="M-30 10 V-40 Q-30 -70 0 -70 Q30 -70 30 -40 V10Z"/></g>`).join('')}
+      <path d="M1340 860 L1350 700 L1330 650 M1350 720 L1390 690 M1346 760 L1310 730" stroke="#050203" stroke-width="10" fill="none" stroke-linecap="round"/>`;
+    return {
+      st: svg(`<rect width="1600" height="1000" fill="#070304"/><rect width="1600" height="1000" fill="url(#${id}r)"/><rect y="600" width="1600" height="400" fill="url(#${id}f)"/>${g}`,
+        `<radialGradient id="${id}r" cx=".78" cy=".16" r=".7"><stop offset="0" stop-color="#7a0d1e" stop-opacity=".95"/><stop offset=".55" stop-color="#2a0509" stop-opacity=".6"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+         <linearGradient id="${id}f" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#b3122f" stop-opacity="0"/><stop offset=".6" stop-color="#b3122f" stop-opacity=".45"/><stop offset="1" stop-color="#3a0610" stop-opacity=".9"/></linearGradient>`),
+      extra: '<div class="scan"></div>',
+      pcs: [pc('moon', 76, 10, '10%', 't-glow', 8, 0, { c: '#f3d9d9' }),
+        pc('drip', 12, 0, '1.6%', 't-drip', 8, 0, { c: '#d10f35', to: '50% 0' }), pc('drip', 19, 0, '1.1%', 't-drip', 8, 3, { c: '#e3173b', to: '50% 0' }), pc('drip', 63, 0, '1.3%', 't-drip', 8, 1.5, { c: '#d10f35', to: '50% 0' }),
+        pc('drip', 88, 0, '1.8%', 't-drip', 8, 5, { c: '#e3173b', to: '50% 0' }), pc('drip', 94, 0, '1.2%', 't-drip', 8, 2.5, { c: '#b10c2c', to: '50% 0' }),
+        pc('fog', -30, 74, '34%', 't-cross', 40, 0, { c: 'rgba(227,23,59,.28)', dx: '160vw', ez: 'linear' }), pc('fog', -40, 82, '44%', 't-cross', 56, -20, { c: 'rgba(160,10,40,.32)', dx: '170vw' }),
+        pc('xmark', 8, 20, '3.2%', 't-pulse', 2, 0, { c: '#e3173b' }), pc('xmark', 90, 56, '2.6%', 't-pulse', 2, 1, { c: '#e3173b' }), pc('xmark', 44, 12, '2%', 't-pulse', 2, .5, { c: '#ff4d6a' }),
+        pc('bat', -10, 26, '5%', 't-cross', 24, 0, { c: '#120608', dx: '130vw', inline: 1 }), pc('bat', -10, 18, '3.6%', 't-cross', 30, -10, { c: '#1a080b', dx: '130vw', inline: 1 }), pc('bat', -10, 34, '3%', 't-cross', 20, -6, { c: '#120608', dx: '130vw', inline: 1 }),
+        pc('dots', 2, 4, '8%', 't-bob', 4, 0, { c: 'rgba(227,23,59,.7)' }), pc('dots', 4, 60, '7%', 't-bob', 4, 2, { c: 'rgba(227,23,59,.5)' })].join(''),
+  };
+  };
+  S.world = id => ({
+    st: svg(`<rect width="1600" height="1000" fill="url(#${id}g)"/><path d="M0 700 Q300 600 620 680 T1240 650 T1600 640 V1000 H0Z" fill="#d6f3e1"/>`,
+      `<linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#9fd8ff"/><stop offset=".7" stop-color="#e3f5ff"/><stop offset="1" stop-color="#f4fbff"/></linearGradient>`),
+    pcs: [pc('sun', 10, 8, '9%', 't-glow', 4, 0, { inline: 1 }),
+      pc('cloud', -30, 12, '16%', 't-cross', 64, 0, { dx: '150vw' }), pc('cloud', -30, 30, '11%', 't-cross', 48, -24, { dx: '150vw' }), pc('cloud', -30, 6, '9%', 't-cross', 80, -50, { dx: '150vw' }), pc('cloud', -30, 44, '13%', 't-cross', 56, -10, { dx: '150vw' }),
+      `<div class="pc" style="--x:-10%;--y:66%;--w:120%;--ar:6;--an:t-bob;--n:8;--dl:0;--dy:-8px;--ez:ease-in-out"><svg viewBox="0 0 1200 200" preserveAspectRatio="none"><path d="M0 120 Q200 30 420 90 T840 70 T1200 80 V200 H0Z" fill="#a7e6bd"/></svg></div>`,
+      `<div class="pc" style="--x:-10%;--y:76%;--w:120%;--ar:5;--an:t-bob;--n:8;--dl:4;--dy:-6px;--ez:ease-in-out"><svg viewBox="0 0 1200 240" preserveAspectRatio="none"><path d="M0 90 Q260 0 560 70 T1200 50 V240 H0Z" fill="#7fd39c"/></svg></div>`,
+      ...[[10, 80, '#ff8cc6'], [22, 84, '#fff'], [36, 79, '#ffd25c'], [61, 83, '#ff8cc6'], [74, 78, '#fff'], [86, 82, '#ff5fa2'], [48, 86, '#a98bf0']].map(([x, y, c], i) => pc('flower', x, y, '2.6%', 't-sway', 2, i * .25, { c, a: '9deg', to: '50% 100%' })),
+      pc('bunny', 30, 70, '4%', 't-hop', 2, 0, { c: '#ff5fa2', to: '50% 100%' }), pc('bunny', 70, 68, '3.4%', 't-hop', 2, 1, { c: '#7cc9f5', to: '50% 100%' }),
+      pc('sparkle', 80, 20, '2.4%', 't-twinkle', 4, 0, { c: '#ff8cc6' }), pc('sparkle', 54, 10, '2%', 't-twinkle', 4, 2, { c: '#fff' }), pc('sparkle', 26, 30, '2.2%', 't-twinkle', 4, 1, { c: '#ff5fa2' })].join(''),
+  });
+  // the character select's set takes the colours and the mark of whoever is picked (CSS vars on the section)
+  S.cs = id => ({
+    st: svg(`<rect width="1600" height="1000" style="fill:var(--bgc,#fff0f7);transition:fill .5s"/><polygon points="0,0 760,0 360,1000 0,1000" style="fill:var(--c2,#ffd0e7);transition:fill .5s"/>
+      <polygon points="1600,0 1600,1000 1180,1000 1460,0" style="fill:var(--c3,#bfe5fb);transition:fill .5s"/><rect width="1600" height="1000" fill="url(#${id}p)" opacity=".18"/>`,
+      `<pattern id="${id}p" width="60" height="60" patternUnits="userSpaceOnUse" patternTransform="rotate(-30)"><rect width="22" height="60" style="fill:var(--ca,#ff4fa0)"/></pattern>`),
+    pcs: [pc('heart', 8, 14, '7%', 't-pulse', 2, 0, { c: 'var(--ca)', mk: 1 }), pc('heart', 86, 12, '5.5%', 't-step', 16, 0, { c: 'var(--ca)' }), pc('heart', 90, 70, '6.5%', 't-pulse', 2, 1, { c: 'var(--cb)' }),
+      pc('heart', 6, 72, '5%', 't-sway', 4, 0, { c: 'var(--cb)', a: '12deg' }), pc('heart', 48, 6, '3.6%', 't-pulse', 1, 0, { c: 'var(--ca)' }),
+      pc('dots', 20, 40, '7%', 't-bob', 4, 0, { c: 'var(--cb)' }), pc('dots', 76, 44, '7%', 't-bob', 4, 2, { c: 'var(--ca)' }),
+      pc('sparkle', 30, 82, '2.6%', 't-twinkle', 4, 0, { c: '#fff' }), pc('sparkle', 66, 86, '2.2%', 't-twinkle', 4, 2, { c: '#fff' })].join('').replace(/v-heart/g, 'v-heart" class="mk'),
+  });
+  S.fits = () => ({ st: '', pcs: [pc('bow' in SYM ? 'bow' : 'heart', 10, 12, '4%', 't-sway', 4, 0, { c: 'var(--oa)', a: '10deg' }), pc('heart', 86, 16, '4%', 't-pulse', 2, 0, { c: 'var(--oa)' }), pc('pxheart', 8, 74, '4.4%', 't-pulse', 1, .5, { c: 'var(--ob)' }),
+    pc('sparkle', 90, 70, '2.6%', 't-twinkle', 4, 0, { c: '#fff' }), pc('sparkle', 50, 6, '2.2%', 't-twinkle', 4, 2, { c: 'var(--oa)' })].join('') });
+  let k = 0;
+  function mount(el, kind) {
+    const id = 'sc' + (k++), s = S[kind](id);
+    el.classList.add('vec'); el.style.backgroundImage = 'none';
+    el.innerHTML = (s.st || '') + (kind === 'hw' || kind === 'play' || kind === 'cs' || kind === 'fits' ? '' : '<div class="ht"></div>') + (s.extra || '') + s.pcs;
+  }
+  return { sprite, mount, pc, txt, svg };
+})();
+
+/* ---------- rigged characters: cut-out puppets. Each character is cut into its pieces (face, eyes, lids, brows, mouth
+   shapes, every lock of hair, torso, upper and lower arms, hands, thighs, shins) straight from the game's 3D model, so a
+   piece hidden behind another comes out whole. Each piece turns on its own joint and nothing bends or stretches. The
+   keys are on the beat of the menu theme: holds, snaps with overshoot, the hair following through late. ---------- */
+const PUP = (() => {
+  const B = 60 / 105;   // seconds per beat
+  const STYLE = { line_alki: 'metal', line_r1nner: 'metal' };   // (the two metal heads bang; everyone else bops)
+  const E = { cub: x => x < .5 ? 4 * x * x * x : 1 - (-2 * x + 2) ** 3 / 2, back: x => { const c = 1.7; return 1 + (c + 1) * (x - 1) ** 3 + c * (x - 1) ** 2; } };
+  // keyframes: [[beat, value, ease into this key]], looping every L beats
+  const key = (ks, b, L) => { b = ((b % L) + L) % L; for (let i = 1; i < ks.length; i++) if (b <= ks[i][0]) { const [b0, v0] = ks[i - 1], [b1, v1, e = 'cub'] = ks[i]; return v0 + (v1 - v0) * E[e]((b - b0) / (b1 - b0)); } return ks[ks.length - 1][1]; };
+  const kick = (ph, k = 7, f = 15) => Math.exp(-ph * k) * Math.cos(ph * f);   // a hit that rings out
+  const hash = (n) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+  const HEAD = { cute: [[0, 0], [1, -5, 'back'], [2.5, -5], [3, 4.5, 'back'], [4.5, 4.5], [5, -2.5, 'back'], [6.5, -2.5], [7, 1.5, 'back'], [8, 0]],
+    metal: [[0, 0], [.5, 3, 'back'], [1, -2, 'back'], [1.5, 3, 'back'], [2, -2, 'back'], [3, -2], [3.5, 4, 'back'], [4, 0, 'cub']] };
+  // the blink: half shut, shut, half, open (seconds)
+  const blinkAt = (t, seed) => {
+    const per = 3.1 + 1.6 * hash(seed), k = Math.floor((t + seed * 1.7) / per), t0 = k * per + .4 + 1.2 * hash(k + seed * 13) - seed * 1.7, d = t - t0;
+    return d < 0 || d > .2 ? 0 : d < .045 ? .5 : d < .12 ? 1 : d < .17 ? .5 : 0;
+  };
+  // a pose for this moment: angles in degrees, offsets in the rig's own pixels
+  function pose(st, b, t, seed) {
+    const ph = ((b % 1) + 1) % 1, p4 = ((b % 4) + 4) % 4, p16 = ((b % 16) + 16) % 16, P = { arm: {}, leg: {} };
+    if (st === 'metal') {
+      P.headA = key(HEAD.metal, b, 4); P.headDy = 6 * Math.max(0, kick(ph, 8, 9));   // a nod on every beat
+      P.bodyA = .8 * Math.sin(Math.PI * b); P.bodyDy = 3 * Math.max(0, kick(ph, 7, 8));
+      P.wave = 7 * Math.max(0, kick(((b % 2) + 2) % 2, 5, 6));                       // the raised hand pumps every other beat
+      P.mouth = p4 < .35 && p16 >= 8 ? 'mA' : null;
+    } else {
+      P.headA = key(HEAD.cute, b, 8) + .7 * Math.sin(t * 2.1); P.headDy = -2 * Math.abs(Math.sin(Math.PI * b));
+      P.bodyA = 1.3 * Math.sin(Math.PI * 2 * b / 8); P.bodyDy = 2.5 * Math.max(0, kick(ph, 7, 9));
+      P.wave = (p4 >= 1 && p4 < 2.2 ? 8 * Math.sin((p4 - 1) * Math.PI * 4) * Math.exp(-(p4 - 1) * 2.6) : 0) + 1.2 * Math.sin(t * 1.7);
+      // a smile and happy eyes on the tilt, every other time round
+      const happy = p16 >= 3 && p16 < 4.6;
+      P.eyes = happy ? 'joy' : null; P.mouth = happy ? 'mJoy' : null;
+    }
+    P.headLag = st === 'metal' ? key(HEAD.metal, b - .25, 4) : key(HEAD.cute, b - .25, 8);
+    P.idle = 1.2 * Math.sin(t * 1.7);
+    P.look = [2.2 * Math.sin(t * .7 + seed), .8 * Math.sin(t * .5 + seed * 2)];
+    P.brow = P.eyes === 'joy' ? -3 : -1.5 * Math.max(0, kick(((b % 8) + 8) % 8, 3, 4));
+    P.blink = P.eyes ? 0 : blinkAt(t, seed);
+    return P;
+  }
+
+  // ---- 2D affine: [a, b, c, d, e, f] like canvas
+  const mul = (m, n) => [m[0] * n[0] + m[2] * n[1], m[1] * n[0] + m[3] * n[1], m[0] * n[2] + m[2] * n[3], m[1] * n[2] + m[3] * n[3], m[0] * n[4] + m[2] * n[5] + m[4], m[1] * n[4] + m[3] * n[5] + m[5]];
+  const about = (px, py, deg, dx = 0, dy = 0, sx = 1, sy = 1) => { const r = deg * Math.PI / 180, c = Math.cos(r), s = Math.sin(r); return [c * sx, s * sx, -s * sy, c * sy, px + dx - (c * sx * px - s * sy * py), py + dy - (s * sx * px + c * sy * py)]; };
+  const ID = [1, 0, 0, 1, 0, 0];
+
+  const cache = new Map();
+  const loadRig = (name) => {
+    if (!cache.has(name)) cache.set(name, Promise.all([
+      fetch(`assets/rig/${name}.json`).then(r => { if (!r.ok) throw 0; return r.json(); }),
+      new Promise((res, rej) => { const i = new Image(); i.decoding = 'async'; i.onload = () => res(i); i.onerror = rej; i.src = `assets/rig/${name}.webp`; }),
+    ]).then(([rig, img]) => prep(rig, img)));
+    return cache.get(name);
+  };
+  // the pieces in drawing order, who hangs from whom, and where the face swaps go
+  function prep(rig, img) {
+    const by = {}; rig.parts.forEach((p, i) => { p.i = i; by[p.name] = p; });
+    const J = rig.joints, raised = {};
+    for (const s of ['L', 'R']) { const w = s === 'L' ? 'left' : 'right', h = J[w + 'Hand'], u = J[w + 'UpperArm']; raised[s] = !!(h && u && h[1] < u[1] + 30); }
+    const head = J.head || [0, 0], hy = (J.neck ? Math.abs(J.head[1] - J.neck[1]) : 60) || 60;
+    rig.parts.forEach(p => {
+      const n = p.name;
+      if (n.startsWith('hair_')) {
+        const len = p.tip ? Math.hypot(p.tip[0] - p.pivot[0], p.tip[1] - p.pivot[1]) : hy;
+        const front = p.tip && p.tip[1] < J.head[1] + hy * 2.2 && Math.abs(p.tip[0] - head[0]) < hy * 1.6;   // (a fringe lock over the face)
+        p.amp = front ? .8 : Math.min(4.2, .9 + 2.6 * len / (hy * 3)); p.ph = hash(p.i + 3) * 6.28; p.fr = 2.2 - Math.min(1, len / (hy * 4)) * .9;
+      }
+    });
+    const sw = {}; (rig.swaps || []).forEach(s => sw[s.name] = s);
+    return { rig, img, by, raised, sw };
+  }
+
+  const list = [];
+  class Puppet {
+    constructor(wrap, name, opt = {}) {
+      this.wrap = wrap; this.img = wrap.querySelector('img'); this.opt = opt; this.phase = opt.phase || 0; this.seed = 1 + (opt.phase || 0) * 7; this.poke = -9; this.near = false; this.R = null;
+      this.cv = document.createElement('canvas'); wrap.appendChild(this.cv); this.ctx = this.cv.getContext('2d');
+      list.push(this);
+      new IntersectionObserver(es => es.forEach(e => { this.near = e.isIntersecting; }), { rootMargin: '300px 0px' }).observe(wrap);
+      new ResizeObserver(() => this.size()).observe(wrap);
+      this.load(null, name);
+    }
+    size() { const d = Math.min(devicePixelRatio || 1, 2); const w = Math.max(2, Math.round(this.cv.offsetWidth * d)), h = Math.max(2, Math.round(this.cv.offsetHeight * d)); if (this.cv.width !== w || this.cv.height !== h) { this.cv.width = w; this.cv.height = h; } }
+    load(src, name) {
+      this.name = name; this.ready = false;
+      loadRig(name).then(R => { if (this.name !== name) return; this.R = R; this.style = this.opt.style || STYLE[name] || 'cute'; this.ready = true; this.size(); this.wrap.classList.remove('nogl'); })
+        .catch(() => { if (this.name === name) this.wrap.classList.add('nogl'); });
+    }
+    frame(t) {
+      if (!this.ready || !this.near) return;
+      const { rig, img, by, raised, sw } = this.R, J = rig.joints, ctx = this.ctx, b = t / B + this.phase;
+      let P = pose(this.style, b, t, this.seed);
+      // a poke (a click on her): a hop, a shake of the head, happy eyes and an open mouth
+      const pk = t - this.poke; if (pk >= 0 && pk < 1) { const e = Math.exp(-pk * 4); P.headA += 9 * Math.sin(pk * 24) * e; P.rootDy = -24 * Math.sin(Math.min(1, pk * 3) * Math.PI) * e; P.eyes = 'joy'; P.blink = 0; P.mouth = 'mA'; P.brow = -4; }
+      if (this.opt.ex) P = Object.assign(P, this.opt.ex(P, b, t));
+      // each piece's own move about its joint
+      const local = (p) => {
+        const n = p.name, [px, py] = p.pivot;
+        if (n === 'torso') return about(px, py, P.bodyA, 0, P.bodyDy);
+        if (n === 'head') return about(px, py, P.headA, 0, P.headDy);
+        if (n.startsWith('hair_')) return about(px, py, -(P.headA - P.headLag) * 1.2 * (p.amp / 3) + p.amp * Math.sin(t * p.fr + p.ph) * .6 + (P.hairX || 0) * p.amp / 3);
+        if (n.startsWith('iris_')) return about(0, 0, 0, P.look[0], P.look[1]);
+        if (n.startsWith('brow_')) return about(0, 0, 0, 0, P.brow);
+        // (a hat stays put on the head and only moves with it: there's no hair under it to show)
+        const s = n.slice(-1), up = raised[s];
+        if (n.startsWith('uparm_')) return about(px, py, (P.arm.u?.[s] ?? (up ? .25 * P.wave : .6 * P.idle)) * (s === 'L' ? 1 : -1));
+        if (n.startsWith('loarm_')) return about(px, py, (P.arm.l?.[s] ?? (up ? .5 * P.wave : .8 * P.idle)) * (s === 'L' ? 1 : -1));
+        if (n.startsWith('hand_')) return about(px, py, (P.arm.h?.[s] ?? (up ? P.wave : P.idle)) * (s === 'L' ? 1 : -1));
+        if (n.startsWith('thigh_')) return about(px, py, P.leg.t?.[s] ?? 0);
+        if (n.startsWith('shin_')) return about(px, py, P.leg.s?.[s] ?? 0);
+        return ID;
+      };
+      const root = about(0, 0, 0, 0, P.rootDy || 0), W = {}; const world = (p) => W[p.name] || (W[p.name] = mul(p.parent && by[p.parent] ? world(by[p.parent]) : root, local(p)));
+      // rig pixels -> canvas: the picture's box inside the canvas (the canvas reaches past it for the moves)
+      const cw = this.cv.width, ch = this.cv.height, [fx0, fy0, fx1, fy1] = rig.frame, iw = cw / 1.24, s = iw / (fx1 - fx0);
+      const base = [s, 0, 0, s, cw * (.12 / 1.24) - fx0 * s, ch * (.08 / 1.10) - fy0 * s];
+      ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.clearRect(0, 0, cw, ch);
+      const draw = (m, e) => { const [u, v, w, h] = e.uv; ctx.setTransform(...mul(base, m)); ctx.drawImage(img, u, v, w, h, e.at[0], e.at[1], w / rig.scale, h / rig.scale); };
+      const swap = (nm) => { const e = sw[nm]; if (e && by.head) draw(world(by.head), e); return !!e; };
+      // a face swap (shut eyes, a smile) goes straight onto the face in place of the eye or mouth pieces, under the hair,
+      // brows and hat, so nothing drawn over the face is ever covered by it
+      const ek = P.eyes === 'joy' ? 'joy' : P.blink ? (P.blink >= 1 ? 'blink' : 'blinkh') : null;
+      const eyeSw = ek && sw[ek + '_L'] ? ek : null, mouthSw = P.mouth && sw[P.mouth] ? P.mouth : null;
+      if (eyeSw) P.brow = 0;   // (the swap carries the brows where they were; a lifted brow would show twice)
+      rig.parts.forEach(p => {
+        if (eyeSw && /^(eye_|iris_|lid_)/.test(p.name)) return;
+        if (mouthSw && p.name === 'mouth') return;
+        draw(world(p), p);
+        if (p.name === 'head') { if (eyeSw) { swap(eyeSw + '_L'); swap(eyeSw + '_R'); } if (mouthSw) swap(mouthSw); }
+      });
+    }
+  }
+  let t0 = performance.now();
+  function loop(now) { requestAnimationFrame(loop); if (document.hidden) return; const t = (now - t0) / 1000; for (const p of list) p.frame(t); }
+  requestAnimationFrame(loop);
+  // wrap an <img> in a puppet
+  function rigImg(img, name, opt) {
+    const w = document.createElement('span'); w.className = 'pupw' + (opt && opt.cls ? ' ' + opt.cls : '');
+    img.replaceWith(w); w.appendChild(img);
+    if (opt && opt.css) w.setAttribute('style', opt.css);
+    return new Puppet(w, name, opt);
+  }
+  return { rigImg, Puppet, preload: (n) => loadRig(n).catch(() => {}), now: () => (performance.now() - t0) / 1000, B };
+})();
+
+/* the sets and the rigs go in before anything shows */
+$('svg[aria-hidden="true"]').insertAdjacentHTML('beforeend', SV.sprite);
+$$('.bgp[data-scene]').forEach(b => SV.mount(b, b.dataset.scene));
+const heroPup = PUP.rigImg($('#girlImg'), 'hero_syaski', { phase: 0 });
+const csPup = PUP.rigImg($('#csImg'), 'line_syaski', { phase: .5 });
+$$('#crew img').forEach((im, i) => { const k = (im.src.match(/line_(\w+)\./) || [])[1] || 'syaski'; PUP.rigImg(im, 'line_' + k, { phase: i * .37, css: im.getAttribute('style') }); im.removeAttribute('style'); });
+$$('#car .it img').forEach((im, i) => { const k = (im.src.match(/fit_(\w+)\./) || [])[1] || 'bunny'; PUP.rigImg(im, 'fit_' + k, { phase: i * .5 }); });
+/* ---------- ribbons: a vector banner that bends, its words riding the same bend ---------- */
+const RIB = (() => {
+  let n = 0;
+  const TH = { blue: { a: '#8fd6ff', b: '#2f9fe0', tail: '#ff5fa2', fold: '#b51f63', ink: '#0d6fa8' }, pink: { a: '#ffa6d2', b: '#ff4fa0', tail: '#7cc9f5', fold: '#1b6fa6', ink: '#b51f63' }, dark: { a: '#ff5d70', b: '#c8102e', tail: '#2a1418', fold: '#000', ink: '#5e0a1a' } };
+  const meas = document.createElement('canvas').getContext('2d');
+  function draw(el, text) {
+    const th = TH[el.dataset.rib || 'blue'], id = 'rb' + (n++), fs = 30, ls = 2.6;
+    meas.font = `${fs}px "Titan One"`; const tw = meas.measureText(text).width + ls * (text.length - 1);
+    const h = 54, tail = 44, pad = 30, Wb = tw + pad * 2, W = Wb + tail * 2 + 8, sag = Math.min(26, Wb * .05);
+    const xa = tail + 4, xb = W - tail - 4, yc = h / 2 + sag * 2 + 10, Hh = yc + h / 2 + 26, cx = W / 2, cy = yc - sag * 2;
+    const band = `M${xa} ${yc - h / 2} Q${cx} ${cy - h / 2} ${xb} ${yc - h / 2} L${xb} ${yc + h / 2} Q${cx} ${cy + h / 2} ${xa} ${yc + h / 2}Z`;
+    const T = (s) => `<polygon points="${s}"/>`, d = 16;
+    const tailL = T(`${xa + 20},${yc - h / 2 + d} ${xa - tail},${yc - h / 2 + d + 4} ${xa - tail + 15},${yc + d + 2} ${xa - tail},${yc + h / 2 + d} ${xa + 20},${yc + h / 2 + d}`);
+    const tailR = T(`${xb - 20},${yc - h / 2 + d} ${xb + tail},${yc - h / 2 + d + 4} ${xb + tail - 15},${yc + d + 2} ${xb + tail},${yc + h / 2 + d} ${xb - 20},${yc + h / 2 + d}`);
+    const fold = T(`${xa},${yc + h / 2} ${xa + 20},${yc + h / 2 + d} ${xa + 20},${yc + h / 2 - 2}`) + T(`${xb},${yc + h / 2} ${xb - 20},${yc + h / 2 + d} ${xb - 20},${yc + h / 2 - 2}`);
+    const mid = `M${xa} ${yc} Q${cx} ${cy} ${xb} ${yc}`;
+    el.innerHTML = `<span class="sr">${text}</span><svg class="ribsvg" viewBox="0 0 ${W.toFixed(0)} ${Hh.toFixed(0)}" aria-hidden="true"><defs><linearGradient id="${id}g" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${th.a}"/><stop offset="1" stop-color="${th.b}"/></linearGradient><path id="${id}m" d="${mid}"/></defs>
+      <g class="rb-band"><g fill="${th.tail}" stroke="#fff" stroke-width="5" stroke-linejoin="round" paint-order="stroke">${tailL}${tailR}</g><g fill="${th.fold}">${fold}</g>
+      <path d="${band}" fill="url(#${id}g)" stroke="#fff" stroke-width="6" stroke-linejoin="round"/>
+      <path d="M${xa + 10} ${yc - h / 2 + 8} Q${cx} ${cy - h / 2 + 8} ${xb - 10} ${yc - h / 2 + 8}" fill="none" stroke="#fff" stroke-opacity=".55" stroke-width="3" stroke-linecap="round"/>
+      <text font-size="${fs}" letter-spacing="${ls}" fill="#fff" stroke="${th.ink}" stroke-width="7" dy="11"><textPath href="#${id}m" startOffset="50%" text-anchor="middle">${text}</textPath></text></g></svg>`;
+    el.dataset.text = text;
+  }
+  const all = () => $$('.rib').forEach(el => draw(el, el.dataset.text || el.textContent.trim()));
+  document.fonts.load('30px "Titan One"').then(all, all);
+  return { set: (el, text) => draw(el, text), all };
+})();
+
+/* ---------- boot: the MiXVERSE logo, the game's loading screen, then the page ---------- */
+const BOOT = (() => {
+  const el = $('#boot'), root = document.documentElement;
+  let resolve; const done = new Promise(r => resolve = r);
+  const finish = () => { root.classList.remove('booting'); resolve(); };
+  if (!el || reduce || /noboot/.test(location.search)) { if (el) el.remove(); finish(); return { done }; }
+  // what the page needs before it shows: the faces, the title screen, the stickers
+  const need = ['assets/logo.webp', 'assets/char_syaski.webp', 'assets/ui/t_prealpha.webp', 'assets/ui/pill_pink.webp', 'assets/ui/win_pink.webp', 'assets/ui/torn.webp',
+    ...['s_sparkle', 's_star_b', 's_pxheart', 's_note', 's_headphones', 's_star_y', 's_bow', 's_sparkle2'].map(s => `assets/ui/${s}.webp`)];
+  let got = 0; const total = need.length + 1;
+  const loaded = Promise.all([...need.map(src => new Promise(r => { const i = new Image(); i.onload = i.onerror = () => { got++; r(); }; i.src = src; })),
+    Promise.all(['30px "Titan One"', '800 16px "Nunito"', '700 16px "Pixelify Sans"'].map(f => document.fonts.load(f).catch(() => {}))).then(() => got++)]);
+  root.classList.add('booting');
+  const BTIPS = ['Hit SPACE when the two halves of the heart meet over her head!', 'Hold the key down for the long notes, let go at the end.', 'Too many misses and the screen cracks... careful!', 'Your keys: change them any time in Settings.', 'FEVER fills up with PERFECTs: life comes back twice as fast.'];
+  $('#bootTip').textContent = BTIPS[Math.floor(Math.random() * BTIPS.length)];
+  const logoV = $('.b-logo', el), loadV = $('.b-load', el), mv = $('.b-mv', el), tag = $('.b-tag', el), wipe = $('.wipe', el);
+  SV.mount($('.b-logo .bg', el), 'hero');
+  [...tag.childNodes].forEach(nd => { if (nd.nodeType === 3) { const f = document.createDocumentFragment(); [...nd.textContent].forEach(ch => { const s = document.createElement('span'); s.textContent = ch; s.style.display = 'inline-block'; f.appendChild(s); }); nd.replaceWith(f); } });
+  const wait = ms => new Promise(r => setTimeout(r, ms));
+  let skip = false; const skipNow = () => { skip = true; };
+  el.addEventListener('click', skipNow); addEventListener('keydown', skipNow, { once: true });
+  // the stripes sweep across; the view changes while they cover the screen
+  async function sweep(mid) {
+    const a = wipe.animate([{ transform: 'translateX(-130%) skewX(-16deg)' }, { transform: 'translateX(0) skewX(-16deg)', offset: .5 }, { transform: 'translateX(130%) skewX(-16deg)' }], { duration: 900, easing: 'cubic-bezier(.7,0,.3,1)' });
+    await wait(450); mid(); await a.finished;
+  }
+  // the loading screen's sky: the game's own painter (sky, drifting dots, clouds, the checker path, streaks, hearts)
+  const cv = $('canvas.sky', el), g = cv.getContext('2d'); let run = 1, spd = 1, dist = 0, last = 0, raf = 0;
+  function heart(x, y, s) { g.beginPath(); g.moveTo(x, y + s * .9); g.bezierCurveTo(x - s * 1.6, y - s * .1, x - s * .6, y - s * 1.2, x, y - s * .35); g.bezierCurveTo(x + s * .6, y - s * 1.2, x + s * 1.6, y - s * .1, x, y + s * .9); g.fill(); }
+  function paint(now) {
+    raf = requestAnimationFrame(paint);
+    const t = now / 1000, dt = Math.min(.05, t - (last || t)); last = t; pace(); dist += dt * spd;
+    const d = Math.min(devicePixelRatio || 1, 2), cw = Math.round(cv.clientWidth * d), chh = Math.round(cv.clientHeight * d);
+    if (cv.width !== cw || cv.height !== chh) { cv.width = cw; cv.height = chh; }
+    const H = 720, s = chh / H, W = cw / s; g.setTransform(s, 0, 0, s, 0, 0);
+    const sky = g.createLinearGradient(0, 0, 0, H); sky.addColorStop(0, '#ffd6ec'); sky.addColorStop(.55, '#ffeaf6'); sky.addColorStop(1, '#ffe2f1'); g.fillStyle = sky; g.fillRect(0, 0, W, H);
+    g.fillStyle = 'rgba(255,140,200,.16)';
+    for (let y = 0; y < 460; y += 22) for (let x = ((-t * 30) % 22) - 22; x < W; x += 22) { const r = 2 + 3 * (y / 460); g.beginPath(); g.arc(x + (y / 22 % 2) * 11, y, r, 0, Math.PI * 2); g.fill(); }
+    for (let i = 0; i < 7; i++) { const x = ((i * 260 - (.25 * t + .75 * dist) * (40 + i * 6)) % (W + 320) + W + 320) % (W + 320) - 160, y = 70 + (i * 53) % 170, sc = .7 + (i % 3) * .25;
+      g.fillStyle = 'rgba(255,255,255,.9)'; for (const [dx, dy, r] of [[0, 0, 36], [40, -14, 44], [86, 0, 36], [44, 12, 34]]) { g.beginPath(); g.arc(x + dx * sc, y + dy * sc, r * sc, 0, Math.PI * 2); g.fill(); } }
+    const gy = 470; g.fillStyle = '#ffc2df'; g.fillRect(0, gy, W, H - gy);
+    const sq = 60, off = (dist * 330) % (sq * 2);
+    for (let row = 0; row < 5; row++) { const y0 = gy + row * 52; for (let x = -off - sq * 2; x < W + sq * 2; x += sq) { if (((Math.floor((x + off) / sq) + row) % 2 + 2) % 2) continue; g.fillStyle = row % 2 ? 'rgba(255,255,255,.55)' : 'rgba(255,255,255,.75)'; g.fillRect(x, y0, sq, 52); } }
+    g.fillStyle = 'rgba(244,70,140,.25)'; g.fillRect(0, gy - 6, W, 6);
+    g.strokeStyle = `rgba(255,255,255,${(.8 * run).toFixed(3)})`; g.lineWidth = 3; g.lineCap = 'round';
+    for (let i = 0; i < 7; i++) { const y = 150 + i * 47, x = W - ((dist * 900 + i * 337) % (W + 300)); g.beginPath(); g.moveTo(x, y); g.lineTo(x + 70 + (i % 3) * 30, y); g.stroke(); }
+    g.fillStyle = 'rgba(255,95,158,.5)';
+    for (let i = 0; i < 11; i++) { const x = ((i * 157 + 40) % W), y = 420 - ((t * (30 + i * 4) + i * 90) % 420), sz = 7 + (i % 4) * 3; heart(x + 10 * Math.sin(t * 2 + i), y, sz); }
+    const vg = g.createLinearGradient(0, 560, 0, H); vg.addColorStop(0, 'rgba(255,255,255,0)'); vg.addColorStop(1, 'rgba(255,214,234,.85)'); g.fillStyle = vg; g.fillRect(0, 560, W, H - 560);
+    if (CH) { CH.place(cv.clientWidth, cv.clientHeight); CH.frame(); }
+  }
+  // Syaski chasing the plush: the game's own loading screen (her 3D model, the plush and their shadows), rendered out
+  // of the game as clips that join end to end. a: a run with a trip, r: a run that loops, s: a stagger, f: her feet go
+  // out from under her and she sits down hard. Each clip is its colour over its alpha (as grey), put back together by
+  // WebGL over the sky. BOX: where the clips sit in the game's 1280x720 view, and the line her feet run on.
+  const BOX = { x: 146, y: 0, w: 888, h: 720, foot: 622 };
+  const sm = (a, b, x) => { const k = Math.min(1, Math.max(0, (x - a) / (b - a))); return k * k * (3 - 2 * k); }, bump = (x, a, b, c, d) => sm(a, b, x) * (1 - sm(c, d, x));
+  const CH = (() => {
+    const c = $('canvas.chase', el), gl = c && c.getContext('webgl', { alpha: true, premultipliedAlpha: true, antialias: false });
+    if (!gl) return null;
+    const sh = (ty, src) => { const o = gl.createShader(ty); gl.shaderSource(o, src); gl.compileShader(o); return o; }, pr = gl.createProgram();
+    gl.attachShader(pr, sh(gl.VERTEX_SHADER, 'attribute vec2 p; varying vec2 v; void main() { v = vec2(p.x * .5 + .5, .5 - p.y * .5); gl_Position = vec4(p, 0., 1.); }'));
+    gl.attachShader(pr, sh(gl.FRAGMENT_SHADER, 'precision mediump float; uniform sampler2D t; varying vec2 v; void main() { vec3 c = texture2D(t, vec2(v.x, v.y * .5)).rgb; float a = clamp((texture2D(t, vec2(v.x, .5 + v.y * .5)).g - .02) / .96, 0., 1.); gl_FragColor = vec4(c * a, a); }'));
+    gl.linkProgram(pr); if (!gl.getProgramParameter(pr, gl.LINK_STATUS)) return null; gl.useProgram(pr);
+    gl.bindBuffer(gl.ARRAY_BUFFER, gl.createBuffer()); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, 1, 1]), gl.STATIC_DRAW);
+    const loc = gl.getAttribLocation(pr, 'p'); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+    gl.bindTexture(gl.TEXTURE_2D, gl.createTexture());
+    for (const k of [gl.TEXTURE_MIN_FILTER, gl.TEXTURE_MAG_FILTER]) gl.texParameteri(gl.TEXTURE_2D, k, gl.LINEAR);
+    for (const k of [gl.TEXTURE_WRAP_S, gl.TEXTURE_WRAP_T]) gl.texParameteri(gl.TEXTURE_2D, k, gl.CLAMP_TO_EDGE);
+    const V = {}, hold = document.createElement('div'); let bad = false, cur = null, key = '', box = '';
+    hold.className = 'vids'; el.appendChild(hold);   // (in the page and on screen, or browsers pause muted video to save power)
+    for (const k of ['a', 'f', 'r', 'r2', 's']) {
+      const v = document.createElement('video'); v.muted = v.defaultMuted = v.playsInline = true; v.setAttribute('muted', ''); v.setAttribute('playsinline', '');
+      v.preload = 'auto'; v.addEventListener('error', () => { bad = true; }); v.src = `assets/boot/lo_${k[0]}.${v.canPlayType('video/mp4; codecs="avc1.64001F"') ? 'mp4' : 'webm'}`; V[k] = v; hold.appendChild(v);
+    }
+    // where she runs: the game's framing when the screen is wide enough for both of them; narrower (phones), smaller and
+    // centred, her feet on the near edge of the path
+    function place(W0, H0) {
+      const s = H0 / 720, W = W0 / s, fit = (W - 28) / BOX.w, k = Math.min(1, fit), foot = k < 1 ? 548 : BOX.foot;
+      const w = BOX.w * k * s, h = BOX.h * k * s, left = k < 1 ? (W0 - w) / 2 : ((W - 1280) / 2 + BOX.x) * s, top = (foot - k * (BOX.foot - BOX.y)) * s;
+      const st = `left:${left.toFixed(1)}px;top:${top.toFixed(1)}px;width:${w.toFixed(1)}px;height:${h.toFixed(1)}px`;
+      if (st !== box) { box = st; c.style.cssText = st; const d = Math.min(devicePixelRatio || 1, 2); c.width = Math.max(2, Math.round(w * d)); c.height = Math.max(2, Math.round(h * d)); }
+    }
+    function frame() {
+      if (!cur || cur.readyState < 2) return;
+      try { gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, cur); } catch (e) { bad = true; return; }
+      gl.viewport(0, 0, c.width, c.height); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+    }
+    // a clip from its first frame; resolves when it has played through (the one before goes back to its start, ready again)
+    function play(k) {
+      const v = V[k], old = cur; key = k; cur = v;
+      if (old && old !== v && old !== V.f) { old.pause(); try { old.currentTime = 0; } catch (e) {} }
+      return new Promise(res => { v.onended = () => res(); const p = v.play(); if (p) p.catch(() => { bad = true; res(); }); });
+    }
+    window.__CH = { V, get key() { return key; } };
+    return { V, place, frame, play, get key() { return key; }, get t() { return cur ? cur.currentTime : 0; }, get bad() { return bad; } };
+  })();
+  // the ground and the streaks keep her pace: a spurt on the trip, a stumble on the stagger, a skid to a stop on the fall
+  function pace() {
+    if (!CH || !CH.key) return; const k = CH.key, t = CH.t;
+    spd = k === 'a' ? 1 + .35 * bump(t - .3, 0, .16, .62, 1.1) : k === 's' ? 1 - .2 * bump(t - .3, 0, .22, .85, 1.3) : k === 'f' ? 1 - sm(.15, .75, t) : 1;
+    run = k === 'f' ? 1 - sm(.1, .42, t) : 1;
+  }
+  // (no WebGL or the clips can't play here: the cut-out runner from before, tripping and sitting down)
+  let endT = null, runner = null, plush = null;
+  function cutout() {
+    if (runner) return; const br = $('.b-run', el); br.hidden = false; $('canvas.chase', el).style.display = 'none';
+    runner = PUP.rigImg($('.b-run img.sy', el), 'line_syaski', { ex: (P, b, t) => {
+      const st = t * 2.4, k = Math.sin(st * Math.PI * 2), e = endT == null ? -1 : t - endT;
+      const sit = e < 0 ? 0 : Math.min(1, e / .35), hit = e > .35 ? Math.exp(-(e - .35) * 6) * Math.cos((e - .35) * 22) : 0, r = 1 - sit;
+      // her legs swing from the hips and bend at the knees, her arms pump against them; then she sits down with a bump
+      return { leg: { t: { L: 18 * k * r - 22 * sit, R: -18 * k * r + 22 * sit }, s: { L: (-10 - 10 * k) * r, R: (-10 + 10 * k) * r } },
+        arm: { u: { L: 18 * k * r, R: 18 * k * r }, l: { L: -10 * r, R: -10 * r }, h: {} },
+        rootDy: -26 * Math.abs(Math.sin(st * Math.PI * 2)) * r + 60 * sit - 10 * hit, bodyA: -5 * r + 3 * sit, bodyDy: 0,
+        headA: P.headA * .3 + 4 * Math.sin(st * Math.PI * 4) * r + (e > .4 ? 7 * Math.sin(e * 10) * Math.exp(-(e - .4) * 1.5) : 0),
+        hairX: -5 * k * r, eyes: sit > .6 ? 'joy' : null, mouth: sit > .6 ? 'mA' : null, blink: 0 };
+    } });
+    plush = $('.b-run .plush', el);
+    plush.animate([{ transform: 'translateY(0) scale(1.1,.9)' }, { transform: 'translateY(-60%) scale(.92,1.1)', offset: .4 }, { transform: 'translateY(0) scale(1.12,.88)', offset: .8 }, { transform: 'translateY(0) scale(1)' }], { duration: 571, iterations: Infinity, easing: 'ease-in-out' });
+    plush.animate([{ scale: '1 1' }, { scale: '1 1', offset: .45 }, { scale: '-1 1', offset: .5 }, { scale: '-1 1', offset: .62 }, { scale: '1 1', offset: .67 }], { duration: 3428, iterations: Infinity });
+  }
+  async function go() {
+    // 1. the logo lands
+    mv.animate([{ transform: 'translateY(-120%) scale(.6) rotate(-14deg)', opacity: 0 }, { transform: 'translateY(4%) scale(1.12, .86) rotate(3deg)', opacity: 1, offset: .5 }, { transform: 'translateY(-3%) scale(.95, 1.06) rotate(-2deg)', offset: .68 }, { transform: 'scale(1.02, .98) rotate(1deg)', offset: .84 }, { transform: 'none' }], { duration: 900, easing: 'cubic-bezier(.3,.7,.4,1)', fill: 'backwards' });
+    mv.animate([{ rotate: '-1.5deg', translate: '0 0' }, { rotate: '1.5deg', translate: '0 -8px' }], { duration: 1143, delay: 900, iterations: Infinity, direction: 'alternate', easing: 'ease-in-out' });
+    [...tag.children].forEach((s, i) => s.animate([{ transform: 'translateY(18px) scale(.4)', opacity: 0 }, { transform: 'translateY(-5px) scale(1.15)', opacity: 1, offset: .6 }, { transform: 'none', opacity: 1 }], { duration: 420, delay: 650 + i * 22, easing: 'cubic-bezier(.2,.9,.3,1.2)', fill: 'backwards' }));
+    setTimeout(() => { const r = mv.getBoundingClientRect(); for (let i = 0; i < 12; i++) { const p = document.createElement('img'); p.className = 'pop'; p.src = UI + ['s_sparkle', 's_star_y', 's_pxheart', 's_star_b'][i % 4] + '.webp'; p.style.position = 'absolute'; p.style.left = (r.left + r.width / 2) + 'px'; p.style.top = (r.top + r.height / 2) + 'px'; el.appendChild(p); const a = i / 12 * Math.PI * 2, dd = 160 + Math.random() * 160; p.animate([{ transform: 'translate(-50%,-50%) scale(.2)', opacity: 1 }, { transform: `translate(calc(-50% + ${Math.cos(a) * dd}px), calc(-50% + ${Math.sin(a) * dd * .7}px)) scale(1.1) rotate(${(Math.random() - .5) * 300}deg)`, opacity: 0 }], { duration: 900, easing: 'cubic-bezier(.2,.8,.3,1)' }).onfinish = () => p.remove(); } }, 430);
+    for (let i = 0; i < 13 && !skip; i++) await wait(100);
+    // (her first clip and her fall in hand before the loading screen shows: a little longer on a slow line, then the cut-out)
+    let in3d = !!CH && !CH.bad;
+    if (in3d) { const t1 = performance.now(); while (!skip && !CH.bad && !(CH.V.a.readyState >= 4 || (CH.V.a.readyState >= 3 && CH.V.f.readyState >= 3)) && performance.now() - t1 < 2600) await wait(50); in3d = !CH.bad && CH.V.a.readyState >= 3; }
+    if (!in3d) cutout();
+    // 2. stripes, then the loading screen
+    await sweep(() => { logoV.remove(); loadV.style.opacity = 1; raf = requestAnimationFrame(paint); });
+    const bar = $('.lb i', el), pct = $('.lp', el), t0 = performance.now(); let shown = 0, full = false;
+    const meter = setInterval(() => { const target = full ? 1 : Math.min(got / total, (performance.now() - t0) / (in3d ? 2100 : 1000)); shown += (target - shown) * .3; bar.style.width = (shown * 100).toFixed(1) + '%'; pct.textContent = Math.round(shown * 100) + '%'; }, 40);
+    const skipP = new Promise(r => { const k = setInterval(() => { if (skip) { clearInterval(k); r(); } }, 50); });
+    if (in3d) {
+      // she runs (and trips); while the page is still coming in she keeps running (and staggers); then the fall
+      await Promise.race([CH.play('a'), skipP]);
+      for (const k of ['r', 's', 'r2']) { if (skip || CH.bad || got >= total) break; await Promise.race([CH.play(k), skipP]); }
+      if (CH.bad) cutout();
+    } else {
+      while (!(got >= total && performance.now() - t0 > 1100) && !skip) await wait(40);
+    }
+    full = true;
+    // 3. she trips and sits down, then the stripes take the loading screen away
+    if (in3d && !CH.bad && !skip) { CH.play('f'); await wait(1550); }
+    else { endT = PUP.now(); run = 0; spd = 0; plush?.getAnimations().forEach(a => a.pause()); await wait(skip ? 150 : 800); }
+    clearInterval(meter); bar.style.width = '100%'; pct.textContent = '100%';
+    await sweep(() => { cancelAnimationFrame(raf); loadV.remove(); el.style.background = 'transparent'; el.style.pointerEvents = 'none'; finish(); });
+    if (CH) Object.values(CH.V).forEach(v => { v.pause(); v.removeAttribute('src'); v.load(); });
+    el.remove();
+  }
+  loaded.then(() => {}); go();
+  return { done };
+})();
+
+
 /* ---------- toast + download ---------- */
 const toastEl = $('#toast'); let toastT;
 function toast(msg) { toastEl.textContent = msg; toastEl.hidden = false; toastEl.classList.remove('show'); void toastEl.offsetWidth; toastEl.classList.add('show'); clearTimeout(toastT); toastT = setTimeout(() => toastEl.hidden = true, 2900); }
@@ -1160,34 +1919,6 @@ for (const tk of $$('.torn .tk')) {
   const one = tk.dataset.words.split('|').map(w => `<span>${w}</span><img src="${UI}s_sparkle.webp" alt="">`).join('');
   tk.innerHTML = one + one + one; const c = tk.cloneNode(true); tk.after(c);
 }
-
-/* ---------- the moving halftone screen ---------- */
-(() => {
-  if (reduce) return;
-  const c = $('#ht'), g = c.getContext('2d'); let W = 0, H = 0; const S = 15;
-  const size = () => { W = c.width = innerWidth; H = c.height = innerHeight; }; size(); addEventListener('resize', size);
-  let last = 0;
-  function frame(t) {
-    requestAnimationFrame(frame); if (t - last < 33 || document.hidden) return; last = t;
-    const T = t / 1000; g.clearRect(0, 0, W, H); g.fillStyle = 'rgba(255, 79, 160, .2)'; g.beginPath();
-    const off = (scrollY * .35) % (2 * S);
-    const bx = [W * (.5 + .48 * Math.sin(T * .13)), W * (.5 + .46 * Math.cos(T * .11 + 1.2)), W * (.5 + .42 * Math.sin(T * .09 + 2.4))];
-    const by = [H * (.5 + .46 * Math.cos(T * .12)), H * (.5 + .42 * Math.sin(T * .1 + .5)), H * (.5 + .46 * Math.cos(T * .08 + 3.1))];
-    const R2 = (Math.min(W, H) * .5) ** 2;
-    for (let j = -2, y; (y = j * S - off) < H + S; j++) {
-      const ox = (j & 1) ? S / 2 : 0;
-      for (let x = ox; x < W + S; x += S) {
-        let v = 0;
-        for (let k = 0; k < 3; k++) { const dx = x - bx[k], dy = y - by[k]; v += Math.max(0, 1 - (dx * dx + dy * dy) / R2); }
-        v += .32 * Math.sin(x * .006 + y * .004 - T * .9) + Math.max(0, Math.abs(y / H - .5) - .28) * 1.6;
-        const r = Math.min(3.8, (v - .5) * 4.6); if (r < .4) continue;
-        g.moveTo(x + r, y); g.arc(x, y, r, 0, 6.2832);
-      }
-    }
-    g.fill();
-  }
-  requestAnimationFrame(frame);
-})();
 
 /* ---------- the camera: every 3D set leans with the mouse and cranes with the scroll ---------- */
 const stages = $$('.stage').map(s => {
@@ -1203,7 +1934,7 @@ function camFrame() {
   for (const s of stages) {
     // a switch "whip" is a damped spring back to straight
     s.whipV += -s.whip * .12; s.whipV *= .78; s.whip += s.whipV;
-    const r = s.el.getBoundingClientRect(); s.vis = r.bottom > -60 && r.top < vh + 60; if (!s.vis) continue;
+    const r = s.el.getBoundingClientRect(), vis = r.bottom > -60 && r.top < vh + 60; if (vis !== s.vis) s.el.classList.toggle('off', !vis); s.vis = vis; if (!s.vis) continue;
     const p = reduce ? 0 : clamp(((r.top + r.height / 2) - vh / 2) / (vh / 2 + r.height / 2), -1, 1);
     s.p = p;
     s.cam.style.transform = `translate3d(${(-mx * s.px).toFixed(1)}px, ${(-my * s.py + p * 30).toFixed(1)}px, 0) rotateX(${(my * s.pitch + p * s.tilt).toFixed(2)}deg) rotateY(${(-mx * s.yaw + s.whip).toFixed(2)}deg) translateZ(${(-Math.abs(p) * s.dolly).toFixed(1)}px)`;
@@ -1225,33 +1956,6 @@ function anchors() {
   }
   placeTargets();
 }
-
-/* ---------- living backgrounds: short seamless clips animated from each screen's background art ---------- */
-(function () {
-  const saveData = navigator.connection && navigator.connection.saveData;
-  if (reduce || saveData) return;
-  const vids = [], ext = document.createElement('video').canPlayType('video/mp4; codecs="avc1.640028"') ? 'mp4' : 'webm';
-  $$('.bgp[data-loop]').forEach(bg => {
-    const v = document.createElement('video');
-    v.className = 'loop'; v.muted = true; v.loop = true; v.playsInline = true; v.preload = 'none';
-    v.setAttribute('muted', ''); v.setAttribute('playsinline', ''); v.setAttribute('aria-hidden', 'true');
-    v.src = `assets/ui/loop_${bg.dataset.loop}.${ext}`;
-    v.addEventListener('playing', () => v.classList.add('on'));
-    bg.appendChild(v); vids.push(v);
-  });
-  if (!vids.length) return;
-  const near = new Set();
-  const sync = v => {
-    const bg = v.parentElement, st = bg.closest('.stage');
-    const show = !document.hidden && near.has(st) && (!bg.classList.contains('csbg') || bg.classList.contains('on'));
-    if (show) { if (v.paused) v.play().catch(() => {}); } else if (!v.paused) v.pause();
-  };
-  const all = () => vids.forEach(sync);
-  const lio = new IntersectionObserver(es => { es.forEach(e => e.isIntersecting ? near.add(e.target) : near.delete(e.target)); all(); }, { rootMargin: '150px 0px' });
-  new Set(vids.map(v => v.closest('.stage'))).forEach(s => lio.observe(s));
-  document.addEventListener('visibilitychange', all);
-  window.__syncLoops = all;
-})();
 
 /* ---------- titles slam in once, then float ---------- */
 const tio = new IntersectionObserver(es => es.forEach(e => {
@@ -1283,8 +1987,8 @@ function burstAt(x, y, n) {
 }
 
 /* ---------- hero: the title screen comes in ---------- */
-(() => {
-  const girl = $('#girlImg'), logo = $('#heroLogo'), rib = $('#heroRib'), stamp = $('#heroStamp'), ctas = $$('#heroCtas .btn');
+BOOT.done.then(() => {
+  const girl = $('#heroGirl .pupw'), logo = $('#heroLogo'), rib = $('#heroRib'), stamp = $('#heroStamp'), ctas = $$('#heroCtas .btn');
   if (!reduce) {
     girl.animate([{ transform: 'translateY(30%) rotateY(-28deg) scale(.9)', filter: 'blur(8px)' }, { transform: 'none', filter: 'blur(0)' }], { duration: 1100, easing: 'cubic-bezier(.2,1.2,.3,1)' });
     logo.animate([{ transform: 'translateY(-140%) rotate(-10deg) scale(1.2)' }, { transform: 'translateY(6%) rotate(2deg) scale(.96)', offset: .6 }, { transform: 'none' }], { duration: 900, delay: 200, easing: 'cubic-bezier(.2,1.3,.3,1)', fill: 'backwards' });
@@ -1295,10 +1999,11 @@ function burstAt(x, y, n) {
   $('#girlHit').addEventListener('click', e => {
     if (reduce) return;
     girl.animate([{ transform: 'none' }, { transform: 'translateY(-18px) rotateY(18deg) scale(1.02, .98)' }, { transform: 'translateY(0) scale(1.03, .97)' }, { transform: 'none' }], { duration: 560, easing: 'cubic-bezier(.3,1.4,.5,1)' });
+    heroPup.poke = PUP.now();
     const s = stageOf('top'); if (s) s.whipV += 2.2;
     burstAt(e.clientX || innerWidth / 3, e.clientY || innerHeight / 2, 9);
   });
-})();
+});
 
 /* ---------- audio: menu theme + song previews, one at a time ---------- */
 const audio = new Audio(); audio.preload = 'none'; let owner = null;
@@ -1313,6 +2018,8 @@ function playAudio(src, btn, vol = .7) {
 $('#music').addEventListener('click', e => playAudio('assets/menu_theme.mp3', e.currentTarget, .55));
 for (const b of $$('[data-src]')) b.addEventListener('click', () => playAudio(b.dataset.src, b, .7));
 const vid = $('#trailerVid');
+// on a phone held upright, the vertical cut of the trailer
+if (matchMedia('(max-width: 640px) and (orientation: portrait)').matches) { vid.src = 'assets/trailer_v.mp4'; vid.poster = 'assets/trailer_poster_v.jpg'; vid.closest('.screen').classList.add('vert'); }
 $('#trailerPlay').addEventListener('click', e => { stopAudio(); vid.controls = true; e.currentTarget.hidden = true; vid.play().catch(() => { e.currentTarget.hidden = false; }); });
 vid.addEventListener('play', () => stopAudio());
 
@@ -1322,18 +2029,20 @@ const like = (ic, words) => words.map(w => `<span class="lk"><img src="${UI}${ic
 const CHARS = [
   { id: 'syaski', name: 'SYASKI', mark: HT, world: 'PINK WORLD', tag: 'Just a girl in a pink world', quote: '“More Kawaii, More Happy”', chips: ['KAWAII', 'HYPERPOP', 'DIGICORE'], dark: false, wc: '#ff4fa0', wc2: '#7cc9f5',
     rows: [['Birthday', '???.??'], ['Height', '152 cm'], ['Likes', like(HT, ['Pink', 'Games', 'Music', 'Sweets'])], ['Voice', 'A little shy, but always with you']],
-    alt: 'Syaski in her pink bunny fit', play: { cover: 'cover_syaski', kind: 'ALBUM', title: 'I WISH YOU WELL', lines: ['3 songs playable now, 12 more on the album', 'Classic mode: four keys plus SPACE, with FEVER TIME', '4 outfits to unlock as you level up'] }, t: { ca: '#ff4fa0', cb: '#7cc9f5' } },
+    alt: 'Syaski in her pink bunny fit', play: { cover: 'cover_syaski', kind: 'ALBUM', title: 'I WISH YOU WELL', lines: ['5 songs playable now, 9 more on the album', 'Classic mode: four keys plus SPACE, with FEVER TIME', '4 outfits to unlock as you level up'] }, t: { ca: '#ff4fa0', cb: '#7cc9f5', bgc: '#fff0f7', c2: '#ffd0e7', c3: '#bfe5fb' }, mk: 'heart' },
   { id: 'alki', name: 'ALKI', mark: XM, world: 'TRAP METAL', tag: 'Trap metal menace with shark teeth', quote: '“Pick her if you dare.”', chips: ['TRAP METAL', 'EVIL', 'BADASS'], dark: true, wc: '#e3173b', wc2: '#111111',
     rows: [['Birthday', '???.??'], ['Height', '???'], ['Style', like(XM, ['Trap metal', 'Evil', 'Badass'])], ['Voice', '???']],
-    alt: 'Alki, black hair with red streaks, throwing horns', play: { cover: 'cover_alki', kind: 'SINGLE', title: 'FLY AWAY', lines: ['HIGHWAY mode: the notes ride down a road toward you', 'Every hit is a shot at the zombie horde', 'Fill RAGE and she goes berserk'] }, t: { ca: '#ff2d4f', cb: '#ff8a9b' } },
+    alt: 'Alki, black hair with red streaks, throwing horns', play: { cover: 'cover_alki', kind: 'SINGLE', title: 'FLY AWAY', lines: ['HIGHWAY mode: the notes ride down a road toward you', 'Every hit is a shot at the zombie horde', 'Fill RAGE and she goes berserk'] }, t: { ca: '#ff2d4f', cb: '#ff8a9b', bgc: '#141015', c2: '#5e1022', c3: '#2a0c12' }, mk: 'xmark' },
   { id: 'r1nner', name: 'R1NNER', mark: BO, world: 'HEAVY METAL', tag: 'Loud, fast and completely unhinged', quote: '“Pick him and turn it up.”', chips: ['HEAVY METAL', 'LOUD', 'UNHINGED'], dark: true, wc: '#ff6a1a', wc2: '#111111',
     rows: [['Birthday', '???.??'], ['Height', '???'], ['Style', like(BO, ['Heavy metal', 'Loud', 'Unhinged'])], ['Voice', '???']],
-    alt: 'R1NNER in a leather jacket, chains and camo, pointing at you', play: { cover: null, kind: 'SONGS', title: 'COMING SOON', lines: ['His songs arrive in a later build', 'You can already pick him on the character select screen'] }, t: { ca: '#ff6a1a', cb: '#ffb35c' } },
-  { id: 'kalijero', name: 'KALIJERO', mark: DI, world: 'THE QUIET', tag: 'Nobody has seen what is under the mask', quote: '“Listen. Don’t look.”', chips: ['RAGE ROCK', 'MASKED', 'MYSTERIOUS'], dark: true, wc: '#d9a63a', wc2: '#c8102e',
-    rows: [['Birthday', '???.??'], ['Height', '???'], ['Style', like(DI, ['Rage rock', 'Masked', 'Few words'])], ['Voice', 'Low and slow, until it isn’t']],
-    alt: 'KALIJERO in a hooded coat and a steel mask with gold trim', play: { cover: null, kind: 'SONGS', title: 'COMING SOON', lines: ['His songs arrive in a later build', 'You can already pick him on the character select screen'] }, t: { ca: '#e3b04a', cb: '#c8102e' } },
+    alt: 'R1NNER in a leather jacket, chains and camo, pointing at you', play: { cover: null, kind: 'SONGS', title: 'COMING SOON', lines: ['His songs arrive in a later build', 'You can already pick him on the character select screen'] }, t: { ca: '#ff6a1a', cb: '#ffb35c', bgc: '#0b0b0d', c2: '#4a1406', c3: '#1c0f0a' }, mk: 'bolt' },
+  { id: 'carl', name: 'CARSON', mark: 's_star_y', world: 'WILD WEST', tag: 'The fastest hat-tip in the west', quote: '“Howdy, partner.”', chips: ['COWBOY', 'WILD WEST', 'WORLD'], dark: false, wc: '#ffc21a', wc2: '#2f7bff',
+    rows: [['Birthday', '???.??'], ['Height', '???'], ['Style', like('s_star_y', ['Cowboy', 'Wild west', 'Sheriff'])], ['Plays', 'WORLD (no songs yet)']],
+    alt: 'Carson, a cowboy with a big hat and a red moustache', play: { cover: null, kind: 'WORLD', title: 'NO SONGS YET', lines: ['A cowboy from the wild west, with no songs of his own', 'Take him out into WORLD: walk, drive and hang out', 'His swagger, hat tips and cowboy walk come with him'] }, t: { ca: '#ffb000', cb: '#2f7bff', bgc: '#fff6d8', c2: '#ffe07a', c3: '#ffd0a0' }, mk: 'star' },
 ];
 for (const c of CHARS) { const i = new Image(); i.src = `assets/line_${c.id}.webp`; }
+// (their cut-out rigs too, once the page has settled, so a switch never waits on one)
+setTimeout(() => CHARS.forEach(c => PUP.preload('line_' + c.id)), 4000);
 const cs = $('#characters'), csFigi = $('#csFigi'), csImg = $('#csImg'); let ci = 0, csTouched = false;
 function names(n) { const s = `<span>${n}</span>`.repeat(4); $('#nameA').innerHTML = s + s; $('#nameB').innerHTML = s + s; }
 names('SYASKI');
@@ -1350,8 +2059,7 @@ function setChar(i, dir = 1, user = true) {
     const st = stageOf('characters'); if (st) st.whipV += dir * 4.5;
   }
   setTimeout(() => {
-    $$('.csbg').forEach(b => b.classList.toggle('on', +b.dataset.c === i));
-    if (window.__syncLoops) window.__syncLoops();
+    $$('#characters .mk').forEach(u => u.setAttribute('href', '#v-' + c.mk));
     for (const k in c.t) cs.style.setProperty('--' + k, c.t[k]);
     cs.classList.toggle('dk', c.dark);
     names(c.name);
@@ -1359,12 +2067,12 @@ function setChar(i, dir = 1, user = true) {
   // the 3D spin: out edge-on, swap, then all the way round with a bounce
   const nx = `assets/line_${c.id}.webp`;
   const bu = $('#csBurst'); bu.classList.remove('go'); void bu.offsetWidth; bu.classList.add('go');
-  if (reduce) { csImg.src = nx; csImg.alt = c.alt; }
+  if (reduce) { csImg.src = nx; csImg.alt = c.alt; csPup.load(nx, 'line_' + c.id); }
   else {
     csFigi.getAnimations().forEach(a => a.cancel());
     const out = csFigi.animate([{ transform: 'rotateY(0deg)' }, { transform: `rotateY(${90 * dir}deg) translateY(-30px) scale(.95)` }], { duration: 220, easing: 'cubic-bezier(.55,0,1,.6)', fill: 'forwards' });
     out.onfinish = () => {
-      csImg.src = nx; csImg.alt = c.alt;
+      csImg.src = nx; csImg.alt = c.alt; csPup.load(nx, 'line_' + c.id);
       csFigi.animate([{ transform: `rotateY(${-270 * dir}deg) translateY(-40px) scale(.95)` }, { transform: 'rotateY(0deg) translateY(0) scale(1)' }], { duration: 760, easing: 'cubic-bezier(.2,1.25,.35,1)' });
       out.cancel();
     };
@@ -1408,7 +2116,7 @@ function showFit(sel) {
   if (sel === fsel) return; fsel = sel; const f = FITS[sel];
   $$('.fitbtn').forEach(b => b.setAttribute('aria-checked', +b.dataset.i === sel ? 'true' : 'false'));
   for (const key in f.t) fitsEl.style.setProperty('--' + key, f.t[key]);
-  const rib = $('#fitRib'); rib.textContent = f.name;
+  const rib = $('#fitRib'); RIB.set(rib, f.name);
   if (!reduce) { rib.animate([{ transform: 'scale(.3) rotate(-12deg)' }, { transform: 'scale(1.12) rotate(3deg)', offset: .6 }, { transform: 'none' }], { duration: 520, easing: 'cubic-bezier(.2,1.3,.3,1)' }); const st = stageOf('outfits'); if (st) st.whipV += 2.5; sparkle(rib, 8); }
 }
 function setFit(k, user = true) {
@@ -1523,9 +2231,9 @@ function emote(i) {
 }
 $$('.emote').forEach(b => b.addEventListener('click', () => emote(+b.dataset.e)));
 const MAPS = [
-  { n: 'Sunny Meadow', jp: 'ひだまり', d: 'Noon sun, soft grass and cute things.', sky: 'linear-gradient(#7fc8ff,#cdeeff)', sun: '#fff3a0', g: '#7ccf6a' },
-  { n: 'Midnight Garden', jp: 'まよなか', d: "A red moon, roses and gothic lamps. Alki's pick.", sky: 'linear-gradient(#0c0618,#6e2050)', sun: '#ff5468', g: '#3a1430' },
-  { n: 'Rockyard', jp: 'ロック', d: "Sunset, amps, fire barrels and a stage. R1NNER's pick.", sky: 'linear-gradient(#ff9a52,#ffcf8a)', sun: '#fff1c2', g: '#5a3020' },
+  { n: 'Sunny Meadow', jp: 'ひだまり', d: 'Candy Village: noon sun, soft grass, shops and a car dealership.', sky: 'linear-gradient(#7fc8ff,#cdeeff)', sun: '#fff3a0', g: '#7ccf6a' },
+  { n: 'Midnight Garden', jp: 'まよなか', d: "Moonlit Hollow: a red moon, roses and gothic lamps. Alki's pick.", sky: 'linear-gradient(#0c0618,#6e2050)', sun: '#ff5468', g: '#3a1430' },
+  { n: 'Rockyard', jp: 'ロック', d: "Rock City: sunset, amps, fire barrels and a stage. R1NNER's pick.", sky: 'linear-gradient(#ff9a52,#ffcf8a)', sun: '#fff1c2', g: '#5a3020' },
   { n: 'Blank Canvas', jp: 'まっさら', d: 'An empty field. Build your own map.', sky: 'linear-gradient(#cfe8ff,#f2f9ff)', sun: '#ffffff', g: '#bfe3a8' },
 ];
 $('#maps').innerHTML = MAPS.map((m, i) => `<div class="map" data-rv style="--rr:${i % 2 ? 2 : -2}deg"><div class="sky" style="background:${m.sky}"><i style="background:${m.sun}"></i><span class="gr" style="background:${m.g}"></span></div><div class="txt"><h3>${m.n} <small>${m.jp}</small></h3><p>${m.d}</p></div></div>`).join('');
@@ -1586,7 +2294,7 @@ if (!reduce) {
 
 /* ---------- which screen you're on: nav, controls bar, keys ---------- */
 const kcap = k => k === '<L>' ? `<span class="kc"><svg viewBox="0 0 20 24"><use href="#i-left"/></svg></span>` : k === '<R>' ? `<span class="kc"><svg viewBox="0 0 20 24"><use href="#i-right"/></svg></span>` : `<span class="kc">${k}</span>`;
-const HINTS = { top: [['MUSIC', ['M']], ['SAY HI', ['CLICK']]], trailer: [['MUSIC', ['M']]], chars: [['CHARACTER', ['<L>', '<R>']], ['SPIN', ['DRAG']]], fits: [['OUTFIT', ['<L>', '<R>']]], play: [['TRY THE KEYS', ['A', 'S', 'L', ';']]], hw: [['CHANNEL', ['C']]], world: [['EMOTES', ['1', '9']]], lvl: [['LEVEL', ['<L>', '<R>']]], dl: [['DOWNLOAD', ['ENTER']]] };
+const HINTS = { top: [['MUSIC', ['M']], ['SAY HI', ['CLICK']]], trailer: [['MUSIC', ['M']]], chars: [['CHARACTER', ['<L>', '<R>']], ['SPIN', ['DRAG']]], fits: [['OUTFIT', ['<L>', '<R>']]], play: [['TRY THE KEYS', ['A', 'S', 'L', ';']]], hw: [['CHANNEL', ['C']]], world: [['EMOTES', ['1', '9']]], lvl: [['LEVEL', ['<L>', '<R>']]], mv: [['MUSIC', ['M']]], cars: [['MUSIC', ['M']]], dl: [['DOWNLOAD', ['ENTER']]] };
 let active = 'top'; const ratios = new Map(), secs = [$('#top'), ...$$('[data-sec]')];
 const sio = new IntersectionObserver(es => {
   es.forEach(e => ratios.set(e.target, e.isIntersecting ? e.intersectionRect.height : 0));
@@ -1610,6 +2318,4 @@ addEventListener('keydown', e => {
   else if (active === 'dl' && k === 'Enter' && t === document.body) $('#dlBtn').click();
 });
 </script>
-
-</body>
 </html>
